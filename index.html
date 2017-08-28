@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
-<body>
-<h1>Kostnadsteori og markedsteori</h1>
-<p>Du har ti år på å skape et størst mulig samlet overskudd for en industribedrift.
-  Forutsetninger er gitt under.</p>
-  <table>
+<body onload="onLoadFunc()">
+  <h1>Kostnadsteori og markedsteori</h1>
+
+  <p>Du har ti år på å skape et størst mulig samlet overskudd for en industribedrift.
+    Forutsetninger er gitt under.</p>
+
+  <table id = "costInfo" border="1">
     <tr>
       <th>Produsert mengde;</th>
     </tr>
@@ -15,5 +17,124 @@
       <th>Var. kost. -totalt;</th>
     </tr>
   </table>
+
+  <p> Under følger en oversikt over tilgjenglige ordere. Velg hvilke ordre du vil aksepter.
+    Trykk "neste" for å gå et år frem i tid </p>
+
+
+  <input type="checkbox" name="order" value="1"> 200 enher a 200 per stk.<br>
+  <input type="checkbox" name="order" value="2"> 300 enheter a 150 per stk<br>
+  <input type="checkbox" name="order" value="3"> 400 enheter a 120 per stk<br>
+  <button id = "nxtBtn" onclick = "nextFunc()">Neste</button>
+
+  <br><br>
+
+  <h2>Driftsregnskap</h2>
+
+  <table id = "finStmnt" border="1">
+    <tr>
+      <th>År</th>
+    </tr>
+    <tr>
+      <th>Inntekter</th>
+    </tr>
+    <tr>
+      <th>Faste kostnader</th>
+    </tr>
+    <tr>
+      <th>Variable kostnader</th>
+    </tr>
+    <tr>
+      <th>Resultat</th>
+    </tr>
+    <tr>
+      <th>Samlet overskudd</th>
+    </tr>
+  </table>
+
+  <br><br>
+  <h2> Forslagsliste </h2>
+  <ul>
+    <li>Ordreliste må endre seg fra år til år</li>
+    <li>Annen funksjon for variable kostnader</li>
+    <li>Isteden for liste med mulig ordre kan bedriften stå ovenfor en ukjent etterspørselsfunksjon,
+      som må estimeres på bakgrunn av historikk, eventuelt prøving of feiling.</li>
+    <li>Mulighet for å øke kapasitet mot økte faste kostnader</li>
+    <li>.....</li>
+  </ul>
+
+
+  <script>
+    function onLoadFunc(){
+      //alert("test");
+      tbl = document.getElementById('costInfo');
+      trs = tbl.getElementsByTagName('tr');
+      for(var i = 0; i < 7; i++){
+        var amnt = i * 100;
+        var fc = 12000;
+        var vc = i * 6000 - Math.pow(i, 2) * 100;
+
+        var tmp0 = trs[0].insertCell(-1);
+        tmp0.innerHTML  = amnt;
+
+        var tmp0 = trs[1].insertCell(-1);
+        tmp0.innerHTML  = fc;
+
+        var tmp0 = trs[2].insertCell(-1);
+        tmp0.innerHTML  = vc;
+      }
+    }
+
+    function nextFunc(){
+      var income = 0;
+      var prodn = 0;
+
+      var orderinc = [200 * 200, 300 * 150, 400 * 120];
+      var ordern = [200, 300, 400];
+
+      cbs = document.getElementsByName('order');
+
+      for(var i = 0; i < cbs.length; i++){
+        if(cbs[i].checked){
+          income += orderinc[i];
+          prodn += ordern[i];
+        }
+      }
+
+      var varcost = prodn * 60 - Math.pow(prodn/100, 2) * 100;
+      var res = income - 12000 - varcost;
+
+      tbl = document.getElementById('finStmnt');
+      trs = tbl.getElementsByTagName('tr');
+
+      var ncol = trs[0].cells.length;
+      var tmp0 = trs[0].insertCell(-1);
+      tmp0.innerHTML  = ncol > 1 ? Number(trs[0].cells[ncol - 1].innerHTML) + 1 : 1
+
+      var tmp0 = trs[1].insertCell(-1);
+      tmp0.innerHTML  = income;
+
+      var tmp0 = trs[2].insertCell(-1);
+      tmp0.innerHTML  = 12000;
+
+      var tmp0 = trs[3].insertCell(-1);
+      tmp0.innerHTML  = varcost;
+
+      var tmp0 = trs[4].insertCell(-1);
+      tmp0.innerHTML  = res;
+
+      var tmp0 = trs[5].insertCell(-1);
+      tmp0.innerHTML  = ncol > 1 ? Number(trs[5].cells[ncol - 1].innerHTML) + res : res;
+
+      if(ncol == 10){
+        alert("Ditt samlede overskudd ble " + trs[5].cells[ncol].innerHTML);
+        var tmp0 = document.getElementById('nxtBtn');
+        tmp0.parentNode.removeChild(tmp0);
+      }
+
+    }
+  </script>
+
+
 </body>
 </html>
