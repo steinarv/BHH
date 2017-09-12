@@ -155,7 +155,8 @@ function nextFunc(){
                 }]
       },
       options: {
-                responsive: false,
+                responsive: true,
+                maintainAspectRatio: true,
                 title:{
                     display:false,
                     text:'Akumulert reultat'
