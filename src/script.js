@@ -5,14 +5,14 @@ var a3 = 0.002; // 0.0025 + Math.random() * 0.0001
 var fc = 12000; // 11000 + Math.random() * 2000
 
 var results = [];
-var results1 = [];
+var results1 = []; // Result if optimal order mix is choosen
 
 var norders = 3;
 var orders = [];
 
 function order() {
-  this.price = 50 + Math.floor(Math.random() * 5 + 1) * 10;
-  this.n = 100 + Math.floor(Math.random() * 5 + 1) * 100;
+  this.price = 90 + Math.floor(Math.random() * 11 + 1) * 10;
+  this.n = Math.floor(Math.random() * 4 + 1) * 100;
 }
 
 function varcostFunc(n) {
@@ -27,17 +27,18 @@ function onLoadFunc(){
     orders.push(nord);
 
     var newrow = document.getElementById("ordertbl").insertRow(-1);
-    newrow.insertCell(-1).innerHTML = '<input type="checkbox" name="order" value="1">';
+    newrow.insertCell(-1).innerHTML = '<input type="checkbox" name="orderCB" value="1">';
     newrow.insertCell(-1).innerHTML = nord.n;
     newrow.insertCell(-1).innerHTML = nord.price;
   }
 
   tbl = document.getElementById('costInfo');
   trs = tbl.getElementsByTagName('tr');
-  for(var i = 1; i < 7; i++){
-    var amnt = i * 100;
+  prod_amount = [100, 200, 300, 400, 500, 600, 1000];
+  for(var i = 0; i < prod_amount.length; i++){
+    var amnt = prod_amount[i];
     var fc = 12000;
-    var vc = varcostFunc(i * 100);
+    var vc = varcostFunc(prod_amount[i]);
 
     var tmp0 = trs[0].insertCell(-1);
     tmp0.innerHTML  = amnt;
@@ -56,16 +57,29 @@ function nextFunc(){
   var prodn = 0;
   var cumres = 0;
 
-  var cbs = document.getElementsByName('order');
+  // Find optimal prod mix
+  var contMarg = 0, opt0 = 0;
+  for(var i = 0; i < norders; i++) {
+    contMarg = orders[i].n * orders[i].price - varcostFunc(orders[i].n);
+    j = i + 1;
+    while(j < norders) {
+      contMarg += orders[i].n * orders[i].price - varcostFunc(orders[i].n);
+      j++;
+    }
+    if(contMarg > opt0) {opt0 = contMarg;}
+  }
+  results1.push(opt0 - fc);
+
+  var cbs = document.getElementsByName('orderCB');
 
   for(var i = 0; i < norders; i++){
     if(cbs[i].checked){
-      income += orders[i].n * orders[i].price;;
+      income += orders[i].n * orders[i].price;
       prodn += orders[i].n;
     }
   }
 
-  var varcost = prodn * 60 - Math.pow(prodn/100, 2) * 100;
+  var varcost = varcostFunc(prodn);
   var res = income - fc - varcost;
   results.push(res);
 
@@ -103,10 +117,50 @@ function nextFunc(){
     for(var i = 1; i < trs.length; i++){
       nord = new order();
       orders[i - 1] = nord;
-      trs[i].cells[0].innerHTML =  '<input type="checkbox" name="order" value="1">';
+      trs[i].cells[0].innerHTML =  '<input type="checkbox" name="orderCB" value="1">';
       trs[i].cells[1].innerHTML = nord.n;
       trs[i].cells[2].innerHTML = nord.price;
     }
   }
 
 }
+
+
+
+var ctx = document.getElementById("resChart").getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
