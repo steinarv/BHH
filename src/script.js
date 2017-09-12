@@ -110,11 +110,12 @@ function nextFunc(){
   //cumres  = ncol > 1 ? Number(trs[5].cells[ncol - 1].innerHTML) + res : res;
   tmp0.innerHTML = cumres.toLocaleString();
 
-  if(ncol == 10){
+  if(ncol == 5){
     alert("Ditt samlede overskudd ble " + cumres.toLocaleString());
     var tmp0 = document.getElementById('nxtBtn');
     tmp0.parentNode.removeChild(tmp0);
   }else{
+    document.getElementById('orderHeading').innerHTML = "Ordreliste for år " + (ncol + 1);
     // New orders
     trs = document.getElementById("ordertbl").rows;
     for(var i = 1; i < trs.length; i++){
