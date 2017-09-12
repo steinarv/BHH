@@ -16,6 +16,10 @@
       background-color: #2f2f2f;
       color: #ffffff;
     }
+    canvas {
+      width: auto;
+      height: 100%;
+    }
 </style>
 </head>
 
@@ -27,8 +31,13 @@
   <div class="container bg-1">
     <br><br>
     <h3>Forutsetninger</h3>
-    <p>Du har ti år på å skape et størst mulig samlet overskudd for en industribedrift.
-      Informasjon om bedriftens kostnadsstruktur er gitt under.</p>
+    <p>Du produksjonssjef i en bedrift som produserer ... Vi antar at bedriften til enhver tid har en ordrereserve tilgjengelig,
+      som de kan velge om de vil betjene.
+      <br>Vi tenke oss at alle ordrene har produksjonstid på et år,
+      og at produksjonen planlegges den 1. januar.
+      <br>Bedriftens variable kostnader er meget sensitive til volum, da det er noen stordriftsfordeler, men også betydelig kostnader knyttet
+      til overtid og innleie av ekstra produksjonsmidler når kapasiteten strekkes til det ytterste.
+      <br>Det eksakte forholdet mellom aktivitet og kostnader er ukjent, men det er laget en veildene oversikt som er presentert under.</p>
 
     <table id = "costInfo" class="table table-bordered">
       <tr>
@@ -42,6 +51,13 @@
       </tr>
     </table>
 
+    <br><p> Du har som oppgave å velge ut de ordrene som er mest lønnsomme i den
+      forstand at de maksimerer bedriftens resultat for de neste 5 årene.
+      <br>Bedriftens lønnsomhet med deg som produksjonsjef kan du følge i driftsregnskapet som vil
+      vises etter at første årets produksjon er ferdig.
+      <br>Et diagram som også viser akumulert resultat ved optimal produksjonmix du da også finne du
+      driftsregnskapet.
+      <br>Lykke til!</p>
     <br><br>
 
     <h3>Ordreliste</h3>
@@ -59,33 +75,38 @@
 
     <br><br><br>
 
-    <h3>Driftsregnskap</h3>
+    <div  id="divRes" style="display:none" class="row">
+      <h3>Driftsregnskap</h3>
 
-    <table id = "finStmnt" class="table table-bordered">
-      <tr>
-        <th>År</th>
-      </tr>
-      <tr>
-        <th>Inntekter</th>
-      </tr>
-      <tr>
-        <th>Faste kostnader</th>
-      </tr>
-      <tr>
-        <th>Variable kostnader</th>
-      </tr>
-      <tr>
-        <th>Resultat</th>
-      </tr>
-      <tr>
-        <th>Samlet overskudd</th>
-      </tr>
-    </table>
+      <table id = "finStmnt" class="table table-bordered">
+        <tr>
+          <th>År</th>
+        </tr>
+        <tr>
+          <th>Inntekter</th>
+        </tr>
+        <tr>
+          <th>Faste kostnader</th>
+        </tr>
+        <tr>
+          <th>Variable kostnader</th>
+        </tr>
+        <tr>
+          <th>Resultat</th>
+        </tr>
+        <tr>
+          <th>Samlet overskudd</th>
+        </tr>
+      </table>
 
-    <br><br>
+      <br><br>
 
-    <canvas id="resChart" width="400" height="400"></canvas>
+      <h4>Samlet overskudd</h4>
 
+    </div>
+
+    <canvas id="resChart" class='img-responsive' width="500" height="300"></canvas>
+  </div>
 <!--
     <h2> Forslagsliste </h2>
     <ul>
@@ -100,7 +121,9 @@
 -->
 
 
-<script type="text/javascript" src="src/script.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+<script type="text/javascript" src="src/script.js"></script>
+
 </body>
 </html>

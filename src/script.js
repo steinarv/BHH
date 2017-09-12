@@ -10,6 +10,9 @@ var results1 = []; // Result if optimal order mix is choosen
 var norders = 3;
 var orders = [];
 
+var ctx = document.getElementById("resChart").getContext('2d');
+Chart.defaults.global.defaultFontColor = '#ffffff';
+
 function order() {
   this.price = 90 + Math.floor(Math.random() * 11 + 1) * 10;
   this.n = Math.floor(Math.random() * 4 + 1) * 100;
@@ -123,44 +126,68 @@ function nextFunc(){
     }
   }
 
-}
+  // cumulative results
+  var chartLabels = ["0"];
+  for(var i = 1; i <= results.length; i++)chartLabels.push(i.toString());
 
+  var chartData = []; var chartData1 = [];
+  results.reduce(function(a,b,i) { return chartData[i] = a+b; },0);
+  results1.reduce(function(a,b,i) { return chartData1[i] = a+b; },0);
+  chartData.unshift(0); chartData1.unshift(0); //start at 0
 
-
-var ctx = document.getElementById("resChart").getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
+  var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+                labels: chartLabels,
+                datasets: [{
+                    label: "Dine valg",
+                    backgroundColor: '#00ff00',
+                    borderColor: '#00ff00',
+                    data: chartData,
+                    fill: false,
+                }, {
+                    label: "Optimal ordremix",
+                    backgroundColor: '#0ffff0',
+                    borderColor: '#0ffff0',
+                    data: chartData1,
+                    fill: false,
+                }]
+      },
+      options: {
+                responsive: false,
+                title:{
+                    display:false,
+                    text:'Akumulert reultat'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: false
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        gridLines: {
+                          display: true
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'År'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: false
+                        }
+                    }]
                 }
-            }]
-        }
-    }
-});
+            }
+  });
+
+
+  document.getElementById('divRes').style.display = "inline";
+}
