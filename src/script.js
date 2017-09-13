@@ -22,6 +22,29 @@ function varcostFunc(n) {
   return(a1 * n - a2 * Math.pow(n, 2) + a3 * Math.pow(n, 3));
 }
 
+var allComb = function(n) {
+    var a = [];
+    for(var i = 1; i <= n; i++)a.push(i);
+
+    var fn = function(n, src, got, all) {
+        if (n == 0) {
+            if (got.length > 0) {
+                all[all.length] = got;
+            }
+            return;
+        }
+        for (var j = 0; j < src.length; j++) {
+            fn(n - 1, src.slice(j + 1), got.concat([src[j]]), all);
+        }
+        return;
+    }
+    var all = [];
+    for (var i = 1; i < a.length; i++) {
+        fn(i, a, [], all);
+    }
+    all.push(a);
+    return all;
+}
 
 function onLoadFunc(){
   //create orders
@@ -52,6 +75,11 @@ function onLoadFunc(){
     var tmp0 = trs[2].insertCell(-1);
     tmp0.innerHTML  = vc.toLocaleString();
   }
+
+  document.getElementById('orderTxt').innerHTML =
+  'Under følger en oversikt over tilgjenglige ordere.'
+  + 'Velg hvilke ordre du vil aksepter.'
+  + 'Trykk "neste" for å gå et år frem i tid';
 }
 
 
@@ -61,17 +89,39 @@ function nextFunc(){
   var cumres = 0;
 
   // Find optimal prod mix
-  var contMarg = 0, opt0 = 0;
-  for(var i = 0; i < norders; i++) {
-    contMarg = orders[i].n * orders[i].price - varcostFunc(orders[i].n);
-    j = i + 1;
-    while(j < norders) {
-      contMarg += orders[i].n * orders[i].price - varcostFunc(orders[i].n);
+  var j, prodNum, totInc, contMarg, optOrderInd, optNum;
+  var optMarg = 0, optOrderInd = [];
+
+  var arr0, k;
+  var arr = allComb(norders);
+
+  for(var i = 0; i < arr.length; i++) {
+    arr0 = arr[i]
+    prodNum = 0;
+    totInc = 0;
+
+    for(j = 0; j < arr0.length; j++) {
+      k = arr0[j] - 1;
+      prodNum += orders[k].n;
+      totInc += orders[k].n * orders[k].price
+      contMarg = totInc - varcostFunc(prodNum);
+
+      if(contMarg > optMarg) {optMarg = contMarg; optNum = prodNum; optOrderInd = arr0}
       j++;
     }
-    if(contMarg > opt0) {opt0 = contMarg;}
   }
-  results1.push(opt0 - fc);
+  results1.push(optMarg - fc);
+  console.log(optOrderInd);
+  if(optOrderInd.length > 0) {
+
+    var tbl = document.getElementById('ordertbl');
+    var trs = tbl.getElementsByTagName('tr');
+    for(var i = 0; i < optOrderInd.length; i++) {
+
+      trs[optOrderInd[i]].style.backgroundColor = "blue";
+    }
+  }
+
 
   var cbs = document.getElementsByName('orderCB');
 
@@ -110,21 +160,22 @@ function nextFunc(){
   //cumres  = ncol > 1 ? Number(trs[5].cells[ncol - 1].innerHTML) + res : res;
   tmp0.innerHTML = cumres.toLocaleString();
 
+  document.getElementById('orderTxt').innerHTML =
+    'Dine valge ordre ga et dekningsbidrag på '
+    + (income - varcost).toLocaleString()
+    + '.<br> Optimal ordremix er markert med blått, dette ville gitt et dekningsbidrag på '
+    + optMarg.toLocaleString() + ".<br>";
+
   if(ncol == 5){
     alert("Ditt samlede overskudd ble " + cumres.toLocaleString());
-    var tmp0 = document.getElementById('nxtBtn');
-    tmp0.parentNode.removeChild(tmp0);
+
+    //var tmp0 = document.getElementById('nxtBtn');
+    //tmp0.parentNode.removeChild(tmp0);
   }else{
-    document.getElementById('orderHeading').innerHTML = "Ordreliste for år " + (ncol + 1);
-    // New orders
-    trs = document.getElementById("ordertbl").rows;
-    for(var i = 1; i < trs.length; i++){
-      nord = new order();
-      orders[i - 1] = nord;
-      trs[i].cells[0].innerHTML =  '<input type="checkbox" name="orderCB" value="1">';
-      trs[i].cells[1].innerHTML = nord.n;
-      trs[i].cells[2].innerHTML = nord.price;
-    }
+    document.getElementById('moveonBtn').style.display = "inline";
+
+    document.getElementById('orderTxt').innerHTML +=
+      'Trykk "Videre" for å se tilgjengelige ordre for år ' + (ncol + 1) + ".";
   }
 
   // cumulative results
@@ -192,4 +243,30 @@ function nextFunc(){
 
 
   document.getElementById('divRes').style.display = "inline";
+  document.getElementById('nxtBtn').style.display = "none";
+}
+
+
+function moveonFunc() {
+
+  ncol = document.getElementById('finStmnt').rows[0].length - 1;
+  // New orders
+  trs = document.getElementById("ordertbl").rows;
+  for(var i = 1; i < trs.length; i++){
+    trs[i].style.backgroundColor = "#2f2f2f";
+    nord = new order();
+    orders[i - 1] = nord;
+    trs[i].cells[0].innerHTML =  '<input type="checkbox" name="orderCB" value="1">';
+    trs[i].cells[1].innerHTML = nord.n;
+    trs[i].cells[2].innerHTML = nord.price;
+  }
+
+
+  document.getElementById('orderHeading').innerHTML = "Ordreliste for år " + (ncol + 1);
+  document.getElementById('nxtBtn').style.display = "inline";
+  document.getElementById('orderTxt').innerHTML =
+  'Under følger en oversikt over tilgjenglige ordere.'
+  + 'Velg hvilke ordre du vil aksepter.'
+  + 'Trykk "neste" for å gå et år frem i tid';
+  document.getElementById('moveonBtn').style.display = "none";
 }

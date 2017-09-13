@@ -41,28 +41,27 @@
 
     <table id = "costInfo" class="table table-bordered">
       <tr>
-        <th>Produsert mengde;</th>
+        <th>Produsert mengde</th>
       </tr>
       <tr>
-        <th>Faste kost. -totalt;</th>
+        <th>Faste kost. -totalt</th>
       </tr>
       <tr>
-        <th>Var. kost. -totalt;</th>
+        <th>Variable kost. -totalt</th>
       </tr>
     </table>
 
     <br><p> Du har som oppgave å velge ut de ordrene som er mest lønnsomme i den
       forstand at de maksimerer bedriftens resultat for de neste 5 årene.
       <br>Bedriftens lønnsomhet med deg som produksjonsjef kan du følge i driftsregnskapet som vil
-      vises etter at første årets produksjon er ferdig.
-      <br>Et diagram som også viser akumulert resultat ved optimal produksjonmix du da også finne du
+      vises etter at første års produksjon er ferdig.
+      <br>Et diagram som også viser akumulert resultat ved optimal produksjonmix vil du da også finne du
       driftsregnskapet.
       <br>Lykke til!</p>
     <br><br>
 
     <h3 id="orderHeading">Ordreliste for år 1</h3>
-    <p> Under følger en oversikt over tilgjenglige ordere. Velg hvilke ordre du vil aksepter.
-      Trykk "neste" for å gå et år frem i tid </p>
+    <p id = "orderTxt">  </p>
 
     <table class="table table-condensed" id = "ordertbl">
       <tr>
@@ -72,6 +71,7 @@
       </tr>
     </table>
     <button id = "nxtBtn" onclick = "nextFunc()">Neste</button>
+    <button id = "moveonBtn" onclick = "moveonFunc()" style="display:none">Videre</button>
 
     <br><br><br>
 
