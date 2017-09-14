@@ -67,14 +67,13 @@ function onLoadFunc(){
   prod_amount = [100, 200, 300, 400, 500, 600, 1000];
   for(var i = 0; i < prod_amount.length; i++){
     var amnt = prod_amount[i];
-    var fc = 12000;
     var vc = varcostFunc(prod_amount[i]);
 
     var tmp0 = trs[0].insertCell(-1);
     tmp0.innerHTML  = amnt;
 
     var tmp0 = trs[1].insertCell(-1);
-    tmp0.innerHTML  = fc;
+    tmp0.innerHTML  = fc.toLocaleString();
 
     var tmp0 = trs[2].insertCell(-1);
     tmp0.innerHTML  = vc.toLocaleString();
