@@ -13,6 +13,10 @@ var orders = [];
 var ctx = document.getElementById("resChart").getContext('2d');
 Chart.defaults.global.defaultFontColor = '#ffffff';
 
+var nxtTxt = 'Under følger en oversikt over tilgjenglige ordere.'
++ ' Velg hvilke ordre du vil aksepter og '
++ 'trykk "neste" for å gå et år frem i tid';
+
 function order() {
   this.price = 90 + Math.floor(Math.random() * 11 + 1) * 10;
   this.n = Math.floor(Math.random() * 4 + 1) * 100;
@@ -76,10 +80,7 @@ function onLoadFunc(){
     tmp0.innerHTML  = vc.toLocaleString();
   }
 
-  document.getElementById('orderTxt').innerHTML =
-  'Under følger en oversikt over tilgjenglige ordere.'
-  + 'Velg hvilke ordre du vil aksepter.'
-  + 'Trykk "neste" for å gå et år frem i tid';
+  document.getElementById('orderTxt').innerHTML = nxtTxt;
 }
 
 
@@ -106,9 +107,8 @@ function nextFunc(){
       totInc += orders[k].n * orders[k].price
       contMarg = totInc - varcostFunc(prodNum);
 
-      if(contMarg > optMarg) {optMarg = contMarg; optNum = prodNum; optOrderInd = arr0}
-      j++;
     }
+    if(contMarg > optMarg) {optMarg = contMarg; optNum = prodNum; optOrderInd = arr0}
   }
   results1.push(optMarg - fc);
   console.log(optOrderInd);
@@ -249,7 +249,7 @@ function nextFunc(){
 
 function moveonFunc() {
 
-  ncol = document.getElementById('finStmnt').rows[0].length - 1;
+  nyear = document.getElementById('finStmnt').rows[0].children.length - 1;
   // New orders
   trs = document.getElementById("ordertbl").rows;
   for(var i = 1; i < trs.length; i++){
@@ -262,11 +262,8 @@ function moveonFunc() {
   }
 
 
-  document.getElementById('orderHeading').innerHTML = "Ordreliste for år " + (ncol + 1);
+  document.getElementById('orderHeading').innerHTML = "Ordreliste for år " + (nyear + 1);
   document.getElementById('nxtBtn').style.display = "inline";
-  document.getElementById('orderTxt').innerHTML =
-  'Under følger en oversikt over tilgjenglige ordere.'
-  + 'Velg hvilke ordre du vil aksepter.'
-  + 'Trykk "neste" for å gå et år frem i tid';
+  document.getElementById('orderTxt').innerHTML = nxtTxt;
   document.getElementById('moveonBtn').style.display = "none";
 }
