@@ -3,10 +3,10 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
   <style>
     body {
@@ -16,6 +16,12 @@
       background-color: #2f2f2f;
       color: #ffffff;
     }
+    .list-group-item {
+      color: #ffffff !important;
+    }
+    .list-group-item:hover {
+      color: #333333 !important;
+    }
     canvas {
       width: auto;
       height: 100%;
@@ -24,108 +30,32 @@
 </head>
 
 
-<body onload="onLoadFunc()">
-
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid .bg-1">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">WebSiteName</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <!-- <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">Page 1</a></li>
+        <li><a href="#">Page 2</a></li>
+        <li><a href="#">Page 3</a></li> -->
+      </ul>
+    </div>
+  </nav>
 
   <!-- Main -->
   <div class="container bg-1">
     <br><br>
-    <h3>Forutsetninger</h3>
-    <p>Anta du er produksjonssjef i en bedrift som produserer ...
-      Vi antar videre at bedriften til enhver tid har en ordrereserve tilgjengelig,
-      som de kan velge om de vil betjene.
-      <br>Alle ordrene har en produksjonstid på et år, og produksjonen planlegges den 1. januar.
-      <br>Bedriftens variable kostnader er meget sensitive til volum, da det er noen stordriftsfordeler,
-      men også betydelig kostnader knyttet til overtid og innleie av ekstra produksjonsmidler
-      når kapasiteten strekkes til det ytterste.
-      <br>Det eksakte forholdet mellom aktivitet og kostnader er ukjent,
-      men det er laget en veildene oversikt som er presentert under.</p>
-
-    <table id = "costInfo" class="table table-bordered">
-      <tr>
-        <th>Produksjon -totalt</th>
-      </tr>
-      <tr>
-        <th>Faste kost. -totalt</th>
-      </tr>
-      <tr>
-        <th>Variable kost. -totalt</th>
-      </tr>
-    </table>
-
-    <br><p>For de neste 5 årene har du som oppgave å velge ut de ordrene som er mest lønnsomme i den
-      forstand at de maksimerer bedriftens resultat.
-      <br>Bedriftens lønnsomhet kan du følge i driftsregnskapet som vil
-      vises etter at første års produksjon er ferdig.
-      <br>Et diagram som viser akumulert resultat ved optimal produksjonmix vil du da også finne under
-      driftsregnskapet.
-      <br>Lykke til!</p>
-    <br><br>
-
-    <h3 id="orderHeading">Ordreliste for år 1</h3>
-    <p id = "orderTxt">  </p>
-
-    <table class="table table-condensed" id = "ordertbl">
-      <tr>
-        <th>Godta</th>
-        <th>Kvantum</th>
-        <th>Pris per stk.</th>
-      </tr>
-    </table>
-    <button id = "nxtBtn" onclick = "nextFunc()">Neste</button>
-    <button id = "moveonBtn" onclick = "moveonFunc()" style="display:none">Videre</button>
-
-    <br><br><br>
-
-    <div  id="divRes" style="display:none" class="row">
-      <h3>Driftsregnskap</h3>
-
-      <table id = "finStmnt" class="table table-bordered">
-        <tr>
-          <th>År</th>
-        </tr>
-        <tr>
-          <th>Inntekter</th>
-        </tr>
-        <tr>
-          <th>Faste kostnader</th>
-        </tr>
-        <tr>
-          <th>Variable kostnader</th>
-        </tr>
-        <tr>
-          <th>Resultat</th>
-        </tr>
-        <tr>
-          <th>Samlet overskudd</th>
-        </tr>
-      </table>
-
-      <br><br>
-
-      <h4>Samlet overskudd</h4>
-
+    <div class="list-group bg-1">
+      <a href = "kost1.html" class="list-group-item bg-1">Kostnadsanalyse - produksjonsplanlegging</a>
+      <a href = "#" class="list-group-item bg-1">Kommer...</a>
+      <a href = "#" class="list-group-item bg-1">Kommer...</a>
     </div>
-
-    <canvas id="resChart" class='img-responsive'></canvas>
   </div>
-<!--
-    <h2> Forslagsliste </h2>
-    <ul>
-      <li>Ordreliste må endre seg fra år til år</li>
-      <li>Annen funksjon for variable kostnader</li>
-      <li>Isteden for liste med mulig ordre kan bedriften stå ovenfor en ukjent etterspørselsfunksjon,
-        som må estimeres på bakgrunn av historikk, eventuelt prøving of feiling.</li>
-      <li>Mulighet for å øke kapasitet mot økte faste kostnader</li>
-      <li>.....</li>
-    </ul>
-  </div>
--->
 
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
-<script type="text/javascript" src="src/script.js"></script>
 
 </body>
 </html>
