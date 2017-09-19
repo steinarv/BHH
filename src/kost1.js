@@ -166,7 +166,13 @@ function nextFunc(){
     + optMarg.toLocaleString() + ".<br>";
 
   if(ncol == 5){
-    alert("Ditt samlede overskudd ble " + cumres.toLocaleString());
+    var cumres1 = results1.reduce(function(total, i){
+      return total + i;
+    }, 0);
+    var diffp = - (cumres1 - cumres) * 100 / cumres1;
+    alert("Ditt samlede overskudd ble " + cumres.toLocaleString()
+    + ", optimal ordremix ville gitt et samlet overskudd på " + cumres1.toLocaleString()
+    + ". Dette utgjør en differanse i prosent på " + Math.round(diffp) + "%");
 
     //var tmp0 = document.getElementById('nxtBtn');
     //tmp0.parentNode.removeChild(tmp0);
