@@ -73,9 +73,9 @@
               <th>Innkjøpspris</th>
               <th>Rabatt</th>
               <th>Velg antall</th>
-              <th>Sett utsalgspris</th>
             </tr>
           </table>
+          <button id = "buyBtn" onclick = "buyFunc()" class = "btn btn-default">Bestill varer</button>
 
         </div>
         <div id="inventory" class="tab-pane fade">
@@ -83,10 +83,11 @@
           <table id = "tbInventory" class="table table-bordered">
             <tr>
               <th>Varenavn</th>
+              <th>Beholdning</th>
               <th>Sett utsalgspris</th>
             </tr>
           </table>
-
+          <button id = "nxtBtn" onclick = "nextFunc()" class = "btn btn-default">Neste</button>
         </div>
         <div id="turnover" class="tab-pane fade">
 
@@ -98,11 +99,11 @@
               <th>Antall solgte</th>
             </tr>
           </table>
-
         </div>
       </div>
-        <br><br>
-        <button id = "nxtBtn" onclick = "nextFunc()" class = "btn btn-default">Neste</button>
+      <p id="pBank"></p>
+      <br><br>
+
   </div>
 
 
