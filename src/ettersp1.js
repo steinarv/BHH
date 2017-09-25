@@ -11,12 +11,14 @@ var itemList = [ {name: "Kano", mInPrice: 2000, outPrice0: 10000, outPrice1: 10}
 var orderList = [];
 var inventoryList = [];
 var bankValue = 100000;
+var period = 1;
 
 var nxtBtn = document.getElementById("nxtBtn");
 
 var numericInput = document.createElement("INPUT");
 numericInput.setAttribute("type", "number");
 numericInput.setAttribute("value", "0");
+numericInput.min = 0;
 
 findItemInInventoryList = function(itemName) {
     for(var i = 0; i < inventoryList.length; i++) {
@@ -42,10 +44,10 @@ function purchFunc(){
   if(totalCost <= bankValue){
     document.getElementById("pBank").innerHTML = "Du har "
     + (bankValue - totalCost).toLocaleString() + "kr å handle for";
-    nxtBtn.disabled = false;
+    buyBtn.disabled = false;
   }else{
     document.getElementById("pBank").innerHTML = "Dette har du ikke råd til...";
-    nxtBtn.disabled = true;
+    buyBtn.disabled = true;
   }
 
 }
@@ -87,12 +89,16 @@ buyFunc = function() {
       itemName = orderCountArr[i].id.substr(2);
       invInd = findItemInInventoryList(itemName);
 
-      //console.log(itemName + " ---- " + invInd);
+      // If allready in inventoryList add to, else push
       if(invInd >= 0){
         inventoryList[invInd]['n'] += n;
       }else{
-        inventoryList.push( {name: itemName, n: n} );
+        inventoryList.push( {name: itemName, n: n, q0:  orderList[i]['outPrice0'], q1: orderList[i]['outPrice1']} );
       }
+      // update bank roll
+      bankValue -= n * orderList[i]['mInPrice'];
+      // set table element to zero
+      orderCountArr[i].value = 0;
     }
   }
 
@@ -100,14 +106,16 @@ buyFunc = function() {
   var tbl = document.getElementById("tbInventory");
   trs = tbl.getElementsByTagName('tr');
 
+  // delete old table
   for(i = 1; i < trs.length; i++)tbl.deleteRow(-1);
 
+  // make new table
   for(i = 0; i < inventoryList.length; i++) {
     n = parseInt(inventoryList[i]['n']);
     if(n > 0){
       rw = tbl.insertRow(-1);
 
-      rw.insertCell(-1).innerHTML = itemList[i]['name'];
+      rw.insertCell(-1).innerHTML = inventoryList[i]['name'];
       rw.insertCell(-1).innerHTML = n.toString();
 
       var tmpInp = numericInput.cloneNode(true);
@@ -121,5 +129,37 @@ buyFunc = function() {
 }
 
 nxtFunc = function() {
-  var i = 3;
+  // array with same order as inventoryList
+  var salesPriceArr = document.getElementsByName("salesPrice");
+  // Turnover table
+  var tbl = document.getElementById("tbTurnover");
+
+  var j, Qp, nSold, salesPrice;
+
+  for(var i = 0; i < salesPriceArr.length; i++){
+    salesPrice = parseInt(salesPriceArr[i].value);
+    // Find index of inventoryList
+    j = findItemInInventoryList(salesPriceArr[i].id.substr(2));
+    console.log(inventoryList[j].name);
+    // Demand
+    Qp = inventoryList[j].q0 - inventoryList[j].q1 * salesPrice;
+    // Number sold
+    nSold = Math.min(Math.max(Qp, 0), parseInt(inventoryList[i]['n']));
+    console.log(nSold)
+    if(nSold > 0) {
+      bankValue += nSold * salesPrice;
+      // remove from inventory table
+
+      // add to to turnover table
+      rw = tbl.insertRow(-1);
+
+      rw.insertCell(-1).innerHTML = period.toString();
+      rw.insertCell(-1).innerHTML = inventoryList[j].name;
+      rw.insertCell(-1).innerHTML = salesPrice.toLocaleString();
+      rw.insertCell(-1).innerHTML = nSold.toLocaleString();
+    }
+
+  }
+
+  period++;
 }
