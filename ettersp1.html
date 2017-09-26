@@ -47,21 +47,34 @@
     <h3>Forutsetninger</h3>
       <p>Inspirert av en fetter på Lørenskog har du sagt opp jobben og solgt campingvogna
         for å satse alt på å importere billige varer fra Kina og selge på Finn.no.<br>
-        Vi antar at frakten fra Kina går så raskt at varene kan annonseres med det samme det bestilles <br>
+        Vi antar at frakten fra Kina går så raskt at varene kan annonseres med det samme de er bestilt.<br>
         Alle annonser blir liggende en måned av gangen og alle beslutninger knyttet til volum og pris gjøres den 1. i hver måned. <br>
         Første gang 1.1.20x1. Vi ser i denne oppgaven bort ifra fraktkostnader og mva.<br>
-        Du starter med 100 000 kr i banken og målet er selvfølgelig en million kronasjer i banken på kortest mulig tid. <br>
-        Du velger varer du ønsker å kjøpe inn, samt setter salgspris på disse under fanen "Varekjøp".
-        Salgsprisen på varer du allerede har på lager setter du under fanen "Varelager". <br>
-        Under fanen "Omsetning" finnes oversikt over salg i tidligere perioder.<br>
-        Når du har gjort alle valgene dine trykker du neste for å gå en måned frem i tid.
+        Du starter med 100 000 kr i banken og målet er selvfølgelig en million kroner i banken på kortest mulig tid. <br>
+        <ul>
+          <li>Du velger varer du ønsker å kjøpe inn under fanen "Varekjøp".</li>
+          <li>Salgsprisen på varer som er bestilt eller på lager settes under fanen "Varelager".
+            Her finner du også knappen for å gå en måned frem i tid. </li>
+          <li>Under fanen "Omsetning" finnes oversikt over salg i tidligere perioder.</li>
+        </ul>
         Lykke til!
       </p>
       <br><br>
+
+      <table id="tbInfo" class="table">
+        <td id="tdBank"></td>
+        <td id="tdDate"></td>
+      </table>
+      <br>
+
+      <p><b>Siste hendelser:</b><P>
+      <p id = "pEvent" style="height: 7em; overflow: hidden;"></p>
+      <br><br>
+
       <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#orders">Varekjøp</a></li>
-        <li><a data-toggle="tab" href="#inventory">Varelager</a></li>
-        <li><a data-toggle="tab" href="#turnover">Omsetning</a></li>
+        <li id = "liOrd" class="active"><a data-toggle="tab" href="#orders">Varekjøp</a></li>
+        <li id = "liInv"><a data-toggle="tab" href="#inventory">Varelager</a></li>
+        <li id = "liTrn"><a data-toggle="tab" href="#turnover">Omsetning</a></li>
       </ul>
 
       <div class="tab-content">
@@ -101,8 +114,7 @@
           </table>
         </div>
       </div>
-      <p id="pBank"></p>
-      <br><br>
+
 
   </div>
 
