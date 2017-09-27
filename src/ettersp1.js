@@ -1,11 +1,11 @@
 var itemList = [ {name: "Kano", mInPrice: 2000, q0: 50, q1: 1/50},
-                  {name: "Hockypuck", mInPrice: 30, q0: 300, q1: 5},
-                  {name: "Fiskestang", mInPrice: 100, q0: 1000, q1: 4},
-                  {name: "El-scooter", mInPrice: 3000, q0: 6000, q1: 0.001},
-                  {name: "Tastatur", mInPrice: 50, q0: 400, q1: 0.01},
-                  {name: "Proteinpulver", mInPrice: 30, q0: 200, q1: 0.05},
-                  {name: "Drone", mInPrice: 1000, q0: 3000, q1: 0.0001},
-                  {name: "Hodelykt", mInPrice: 100, q0: 1000, q1: 0.001}
+                  {name: "Hockypuck", mInPrice: 30, q0: 10000, q1: 100},
+                  {name: "Fiskestang", mInPrice: 100, q0: 1000, q1: 3},
+                  {name: "El-scooter", mInPrice: 3000, q0: 200, q1: 1/20},
+                  {name: "Tastatur", mInPrice: 50, q0: 200, q1: 1/2},
+                  {name: "Proteinpulver", mInPrice: 30, q0: 100, q1: 1/3},
+                  {name: "Drone", mInPrice: 1000, q0: 300, q1: 1/15},
+                  {name: "Hodelykt", mInPrice: 100, q0: 1000, q1: 5}
                 ];
 
 var orderList = [];
@@ -40,6 +40,9 @@ findItemInInventoryList = function(itemName) {
 function makeOrderList() {
     orderList = getRandomSubarray(itemList, 3);
     // Herer we can alter porperties
+    for(var i = 0; i < orderList.length; i++) {
+      orderList[i].q0 *= (Math.random() + 0.5);
+    }
 }
 
 function purchFunc(){
@@ -80,6 +83,7 @@ function updateInventoryTable() {
 
       rw.insertCell(-1).innerHTML = inventoryList[i]['name'];
       rw.insertCell(-1).innerHTML = n.toString();
+      rw.insertCell(-1).innerHTML = inventoryList[i]['inPrice'];
 
       tmpInp = numericInput.cloneNode(true);
       tmpInp.setAttribute("id", "s_" + inventoryList[i]['name']);
@@ -101,7 +105,6 @@ function onLoadFunc() {
 
     rw.insertCell(-1).innerHTML = orderList[i]['name'];
     rw.insertCell(-1).innerHTML = orderList[i]['mInPrice'];
-    rw.insertCell(-1);
 
     var tmpInp = numericInput.cloneNode(true);
     tmpInp.setAttribute("id", "o_" + orderList[i]['name']);
@@ -116,7 +119,7 @@ function onLoadFunc() {
 buyFunc = function() {
 
   // update inventoryList
-  var itemName, n, j;
+  var itemName, inPrice, n, j;
   var eventTxt = document.getElementById("pEvent");
   var orderCountArr = document.getElementsByName("purchaseCount");
   for(var i = 0; i < orderCountArr.length; i++){
@@ -124,21 +127,22 @@ buyFunc = function() {
     n = parseInt(orderCountArr[i].value);
     if(n > 0) {
       //check if item allready is in storage
+      inPrice = orderList[i]['mInPrice'];
       itemName = orderCountArr[i].id.substr(2);
       j = findItemInInventoryList(itemName);
 
-      console.log(i + " #### "+ itemName);
-      eventTxt.innerHTML = n.toString() + " " + itemName + " kjøpt for " + orderList[i]['mInPrice'].toString() + ".<br>"
+      eventTxt.innerHTML = n.toString() + " " + itemName + " kjøpt for " + inPrice.toString() + ".<br>"
                           + eventTxt.innerHTML;
 
       // If allready in inventoryList add to, else push
       if(j >= 0){
         inventoryList[j]['n'] += n;
       }else{
-        inventoryList.push( {name: itemName, n: n, q0:  orderList[i]['q0'], q1: orderList[i]['q1']} );
+        inventoryList.push( {name: itemName, n: n, inPrice: inPrice,
+                              q0:  orderList[i]['q0'], q1: orderList[i]['q1']} );
       }
       // update bank roll
-      bankValue -= n * orderList[i]['mInPrice'];
+      bankValue -= n * inPrice;
       // set table element to zero
       orderCountArr[i].value = 0;
     }
@@ -166,6 +170,7 @@ nxtFunc = function() {
     Qp = inventoryList[j].q0 - inventoryList[j].q1 * salesPrice;
     // Number sold
     nSold = Math.min(Math.max(Qp, 0), parseInt(inventoryList[j]['n']));
+    nSold = parseInt(nSold);
 
     if(nSold > 0) {
       // update bank balance
@@ -192,4 +197,9 @@ nxtFunc = function() {
   period++;
   theDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + period, 1);
   document.getElementById("tdDate").innerHTML = "Dato: " + dateFormat(theDate);
+
+  if(bankValue >= 1000000){
+    document.getElementById("pRes").innerHTML = "Gratulerer, du brukte "
+      + period + " måneder på å bli millionær!";
+  }
 }
