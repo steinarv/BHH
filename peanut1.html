@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <style>
+    body {
+      background-color: #2f2f2f !important;
+    }
+    .bg-1 {
+      background-color: #2f2f2f;
+      color: #ffffff;
+    }
+
+    input {
+        color:  #00004d !important;
+    }
+
+    .panel-default{
+      background-color: #2f2f2f;
+      color: #ffffff;
+    }
+
+    ul.nav li a, ul.nav li a:visited {
+    color: #ffffff !important;
+    }
+    ul.nav li a:hover, ul.nav li.active a {
+    color: #00004d !important;
+    }
+
+    canvas {
+      width: auto;
+      height: 100%;
+    }
+</style>
+</head>
+
+
+<body onload="onLoadFunc()">
+
+
+  <!-- Main -->
+  <div class="container bg-1">
+    <br><br>
+    <h3>Forutsetninger</h3>
+      <p>ErikH & EirikH skal starte import av peanøttpoleringsmaskiner fra Hong Kong for salg i Norge.<br>
+        Leverandøren maksimalt levere 4000 stykker pr måned.
+        De blir skipa til Norge i container – en skipning pr måned inneholdende bestillingen for neste måned.<br>
+        Prisen fra Hong Kong (inntakskost) er kr 100,00 pr enhet. Kontainerfrakten koster kr 400 000 pr skipning.<br>
+
+
+      </p>
+      <br>
+      <table id="tbInfo" class="table">
+        <td id="tdDate"></td>
+        <td></td>
+      </table>
+      <br>
+
+      <!-- ################################################################################## -->
+      <b>Problemstilling</b><br>
+      <div class="panel panel-default">
+        <div class="panel-body" id=divAssingment>
+
+        </div>
+      </div>
+      <button id="nxtBtn" onclick="nxtFunc()" class="btn btn-default">Neste</button>
+      <br><br>
+      <p id="pEvent"></p>
+      <br> 
+      <!-- ################################################################################## -->
+
+      <ul class="nav nav-tabs">
+        <li id = "liBal" class="active"><a data-toggle="tab" href="#balance"><br>Balanse</a></li>
+        <li id = "liRes"><a data-toggle="tab" href="#result1">Resultat<br>(Finansregnskap)</a></li>
+        <li id = "liRes"><a data-toggle="tab" href="#result2">Resultat<br>(Driftsregnskap)</a></li>
+      </ul>
+
+      <div class="tab-content">
+        <div id="balance" class="tab-pane fade in active">
+          <br>
+          <table id = "tbBalance" class="table table">
+            <tr>
+              <th>Eiendeler</th>
+              <th>Egenkapital & Gjeld</th>
+            </tr>
+          </table>
+
+        </div>
+
+        <div id="result1" class="tab-pane fade">
+
+          <table id = "tbResult1" class="table table-bordered">
+            <tr>
+              <th>Regnskapspost</th>
+            </tr>
+          </table>
+        </div>
+
+        <div id="result2" class="tab-pane fade">
+
+          <table id = "tbResult2" class="table table-bordered">
+            <tr>
+              <th>Regnskapspost</th>
+            </tr>
+          </table>
+        </div>
+
+      </div>
+
+
+      <!-- ################################################################################## -->
+
+  </div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+<script type="text/javascript" src="src/misc.js"></script>
+<script type="text/javascript" src="src/peanut1.js"></script>
+
+
+</body>
+</html>
