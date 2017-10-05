@@ -31,10 +31,11 @@ function nxtFunc() {
 
   assingments[assignmentNr].mainFunc();
   document.getElementById("pEvent").innerHTML = assingments[assignmentNr].eventTxt();
-  makeBalance();
 
-  updateFinStat(timeStep);
-  makeFinStat();
+
+  // only end of period ----- > updateFinStat(timeStep);
+  makeResult();
+  makeBalance();
   makeCashFlowStat();
 
   dayNr += timeStep;

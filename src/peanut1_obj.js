@@ -12,10 +12,29 @@ var assingments = [
   mainFunc: function() {
           var loan = parseInt(document.getElementById("inSldr").value);
           addto(50000, balance.longTermAssets, 'Varebil');
-          addto(loan, balance.longTermLiabilities, 'Billaan');
+          addto(loan, balance.longTermLiabilities, 'Billån');
           addto(loan - 50000, balance.currentAssets, 'Bankinnskudd');
-          addto(loan * 0.05/356, runningCosts.financeCosts, 'Billaan');
-          addto((50000/10)/356, runningCosts.operatingCosts, 'Avskrivninger');
+          //--------------------
+          //addto(loan * 0.05/356, runningCosts.financeCosts, 'Billån'); // Debet
+          // addto(loan * 0.05/356, balance.currentLiabilities, 'Billån'); // Kredit
+          runningCosts.billaan = {perDay: function(){return(balance.longTermLiabilities.Billån * 0.05/356);},
+                                  add1_obj: balance.currentLiabilities,
+                                  add1_name: "Renter_billån",
+                                  add1_sign: 1,
+                                  add2_obj: result.financeCosts,
+                                  add2_name: "Renter_billån",
+                                  add2_sign: 1};
+
+          runningCosts.avskVarebil = {perDay: function(){return((50000/10)/356);},
+                                  add1_obj: balance.longTermAssets,
+                                  add1_name: "Varebil",
+                                  add1_sign: -1,
+                                  add2_obj: result.operatingCosts,
+                                  add2_name: "Avskrivning varebil",
+                                  add2_sign: 1};
+          //--------------------
+          // addto((50000/10)/356, runningCosts.operatingCosts, 'Avskrivninger'); //Debet
+          // addto( - (50000/10)/356, balance.longTermAssets, 'Varebil'); // Kredit
       },
   eventTxt: function() {
           var loan = parseInt(document.getElementById("inSldr").value);
@@ -37,16 +56,15 @@ var balance = { currentAssets: {Bankinnskudd: 100000},
 
 var runningCosts = {
   // named objects with properties: cost_per_day
-  operatingCosts: {},
-  financeCosts: {}
 };
 
 
 
-var financialStatement = {
+var result = {
   operatingIncome: {},
   operatingCosts: {},
-  financeCosts: {}
+  financeCosts: {},
+  res: 0
 };
 
 

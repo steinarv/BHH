@@ -1,11 +1,15 @@
-function updateFinStat(timeStep) {
+function updateFinStat(nDays) {
+  var val;
   for(var key1 in runningCosts) {
-    for(var key2 in runningCosts[key1]){
-//      console.log(key1.toString() + " --> " + key2.toString());
-//      console.log(runningCosts[key1][key2]);
-      addto(runningCosts[key1][key2] * timeStep,
-            financialStatement[key1], key2.toString());
-    }
+    val = runningCosts[key1].perDay() * nDays;
+
+    addto(val * runningCosts[key1].add1_sign,
+          runningCosts[key1].add1_obj,
+          runningCosts[key1].add1_name);
+    addto(val * runningCosts[key1].add2_sign,
+          runningCosts[key1].add2_obj,
+          runningCosts[key1].add2_name);
+
   }
 }
 
@@ -14,7 +18,7 @@ function updateFinStat(timeStep) {
 
 
 
-function makeFinStat() {
+function makeResult() {
   tbl = document.getElementById("tbResult");
   var trs = tbl.getElementsByTagName('tr');
   var nr = trs.length;
@@ -30,10 +34,10 @@ function makeFinStat() {
   td.innerHTML = '<b>Driftsinntekter</b>';
   td.colSpan = 3
 
-  for(var key in financialStatement.operatingIncome){
+  for(var key in result.operatingIncome){
     rw = tbl.insertRow(-1);
 
-    val = parseInt(financialStatement.operatingIncome[key]);
+    val = parseInt(result.operatingIncome[key]);
     rw.insertCell(-1).innerHTML = key.toString();
     rw.insertCell(-1)
     rw.insertCell(-1).innerHTML = val.toLocaleString();
@@ -46,10 +50,10 @@ function makeFinStat() {
   td.innerHTML = '<b>Driftskostnader</b>';
   td.colSpan = 3
 
-  for(var key in financialStatement.operatingCosts){
+  for(var key in result.operatingCosts){
     rw = tbl.insertRow(-1);
 
-    val = parseInt(financialStatement.operatingCosts[key]);
+    val = parseInt(result.operatingCosts[key]);
     rw.insertCell(-1).innerHTML = key.toString();
     rw.insertCell(-1).innerHTML = val.toLocaleString();
     rw.insertCell(-1)
@@ -62,10 +66,10 @@ function makeFinStat() {
   td.innerHTML = '<b>Finansinntekter</b>';
   td.colSpan = 3
 
-  for(var key in financialStatement.financeIncome){
+  for(var key in result.financeIncome){
     rw = tbl.insertRow(-1);
 
-    val = parseInt(financialStatement.financeIncome[key]);
+    val = parseInt(result.financeIncome[key]);
     rw.insertCell(-1).innerHTML = key.toString();
     rw.insertCell(-1)
     rw.insertCell(-1).innerHTML = val.toLocaleString();
@@ -78,10 +82,10 @@ function makeFinStat() {
   td.innerHTML = '<b>Finanskostnader</b>';
   td.colSpan = 3
 
-  for(var key in financialStatement.financeCosts){
+  for(var key in result.financeCosts){
     rw = tbl.insertRow(-1);
 
-    val = parseInt(financialStatement.financeCosts[key]);
+    val = parseInt(result.financeCosts[key]);
     rw.insertCell(-1).innerHTML = key.toString();
     rw.insertCell(-1).innerHTML = val.toLocaleString();
     rw.insertCell(-1);
