@@ -74,17 +74,17 @@
       <button id="nxtBtn" onclick="nxtFunc()" class="btn btn-default">Neste</button>
       <br><br>
       <p id="pEvent"></p>
-      <br> 
+      <br>
       <!-- ################################################################################## -->
 
       <ul class="nav nav-tabs">
-        <li id = "liBal" class="active"><a data-toggle="tab" href="#balance"><br>Balanse</a></li>
-        <li id = "liRes"><a data-toggle="tab" href="#result1">Resultat<br>(Finansregnskap)</a></li>
-        <li id = "liRes"><a data-toggle="tab" href="#result2">Resultat<br>(Driftsregnskap)</a></li>
+        <li id = "liBal" class="active"><a data-toggle="tab" href="#divBalance"><br>Balanse</a></li>
+        <li id = "liRes"><a data-toggle="tab" href="#divResult">Resultat<br>(Finansregnskap)</a></li>
+        <li id = "liRes"><a data-toggle="tab" href="#divCashFlow"><br>Likviditetsoversikt</a></li>
       </ul>
 
       <div class="tab-content">
-        <div id="balance" class="tab-pane fade in active">
+        <div id="divBalance" class="tab-pane fade in active">
           <br>
           <table id = "tbBalance" class="table table">
             <tr>
@@ -95,20 +95,22 @@
 
         </div>
 
-        <div id="result1" class="tab-pane fade">
-
-          <table id = "tbResult1" class="table table-bordered">
+        <div id="divResult" class="tab-pane fade">
+          <br>
+          <table id = "tbResult" class="table table">
             <tr>
-              <th>Regnskapspost</th>
+              <th></th>
+              <th>Debet</th>
+              <th>Kredit</th>
             </tr>
           </table>
         </div>
 
-        <div id="result2" class="tab-pane fade">
-
-          <table id = "tbResult2" class="table table-bordered">
+        <div id="divCashFlow" class="tab-pane fade">
+          <br>
+          <table id = "tbCashFlow" class="table table">
             <tr>
-              <th>Regnskapspost</th>
+              <th></th>
             </tr>
           </table>
         </div>
@@ -123,8 +125,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
 <script type="text/javascript" src="src/misc.js"></script>
+<script type="text/javascript" src="src/peanut1_obj.js"></script>
+<script type="text/javascript" src="src/peanut1_func.js"></script>
 <script type="text/javascript" src="src/peanut1.js"></script>
-
 
 </body>
 </html>
