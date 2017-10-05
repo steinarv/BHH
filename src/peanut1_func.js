@@ -1,5 +1,5 @@
-function updateFinStat(nDays) {
-  var val;
+function updateFinStat() {
+  var val, nDays = daysSinceUpdatingFinStat;
   for(var key1 in runningCosts) {
     val = runningCosts[key1].perDay() * nDays;
 
@@ -11,8 +11,14 @@ function updateFinStat(nDays) {
           runningCosts[key1].add2_name);
 
   }
+  daysSinceUpdatingFinStat = 0;
 }
 
+function corFunc() {
+  updateFinStat();
+  makeResult();
+  makeBalance();
+}
 
 
 

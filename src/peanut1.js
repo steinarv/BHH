@@ -5,6 +5,8 @@ var dayNr = 1;
 var baseDate = new Date();
 var theDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + 1, 1);
 
+var daysSinceUpdatingFinStat = 0;
+
 
 function onLoadFunc() {
 
@@ -39,5 +41,6 @@ function nxtFunc() {
   makeCashFlowStat();
 
   dayNr += timeStep;
+  daysSinceUpdatingFinStat += timeStep;
   assignmentNr++;
 }
