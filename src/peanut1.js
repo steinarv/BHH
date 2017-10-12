@@ -1,16 +1,9 @@
-var assignmentNr = 0;
-var nAssignments = 1;
-
-var dayNr = 1;
-var baseDate = new Date();
-var theDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + 1, 1);
-
-var daysSinceUpdatingFinStat = 0;
+nAssignments = Object.keys(assingments).length;
 
 
 function onLoadFunc() {
 
-  document.getElementById("tdDate").innerHTML = "Dato: " + dateFormat(theDate);
+  document.getElementById("tdDate").innerHTML = "Dato: " + dateFormat(baseDate);
 
   document.getElementById("divAssingment").innerHTML = assingments[0].txt;
 
@@ -24,23 +17,36 @@ function onLoadFunc() {
 
 function nxtFunc() {
 
-  if(assignmentNr >= nAssignments)return;
+  do {
+    dateToday = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + dayNr);
 
-  var timeStep = assingments[assignmentNr].timeStp();
+    // Check of any paymentsDue or raporting dates
 
-  document.getElementById("tdDate").innerHTML = "Dato: "
-    + dateFormat(new Date(theDate.getFullYear(), theDate.getMonth(), theDate.getDate() + dayNr));
+    document.getElementById("tdDate").innerHTML = "Dato: "
+    + dateFormat(dateToday);
 
-  assingments[assignmentNr].mainFunc();
-  document.getElementById("pEvent").innerHTML = assingments[assignmentNr].eventTxt();
+    if(evaluateAssingment){
 
+      assingments[assignmentNr].mainFunc();
+      document.getElementById("pEvent").innerHTML = assingments[assignmentNr].eventTxt();
 
-  // only end of period ----- > updateFinStat(timeStep);
-  makeResult();
-  makeBalance();
-  makeCashFlowStat();
+      // Pop up question ----------------------------------------------------------
 
-  dayNr += timeStep;
-  daysSinceUpdatingFinStat += timeStep;
-  assignmentNr++;
+      makeResult();
+      makeBalance();
+      makeCashFlowStat();
+
+      assignmentNr++;
+      evaluateAssingment = false;
+    }
+
+    dayNr ++;
+    daysSinceUpdatingFinStat ++;
+
+    if(assignmentNr < nAssignments)if(assingments[assignmentNr].dayNr === dayNr){
+      document.getElementById("divAssingment").innerHTML = assingments[assignmentNr].txt;
+      evaluateAssingment = true;
+    }
+  } while(!evaluateAssingment & assignmentNr < nAssignments)
+
 }

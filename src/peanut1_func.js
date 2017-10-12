@@ -21,7 +21,19 @@ function corFunc() {
 }
 
 
-
+function checkForPaymentsDue(d) {
+  var dDate
+  for(key in paymentsDue){
+    dDate = paymentsDue[key].Date
+    if(dDate.d === d.getDate()){
+      if(dDate.m === (d.getMonth() + 1) | dDate.m === 0){
+        if(dDate.y === d.getFullYear | dDate.y === 0){
+          // Do payment
+        }
+      }
+    }
+  }
+}
 
 
 function makeResult() {
@@ -102,7 +114,7 @@ function makeResult() {
   rw = tbl.insertRow(-1);
   td = rw.insertCell(-1);
   td.innerHTML = 'Forløpig resultat for ' +
-    new Date(theDate.getFullYear(), theDate.getMonth(), theDate.getDate() + dayNr).getFullYear();
+    new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + dayNr).getFullYear();
   var res = sumIncome - sumCost;
   if(res > 0) {
     rw.insertCell(-1).innerHTML = res;
@@ -164,7 +176,7 @@ function dateFormat(d) {
 
 function sliderChange(x) {
 
-  document.getElementById("pSliderVal").innerHTML = x.value.toLocaleString() + " kr";
+  document.getElementById("sSliderVal").innerHTML = x.value.toLocaleString();
 }
 
 
@@ -199,12 +211,15 @@ function makeBalance() {
   td.innerHTML = '<b>Omløpsmidler</b>';
   td.colSpan = 2
   for(key in balance.currentAssets){
-    rw = tbl.insertRow(-1);
-
     val = parseInt(balance.currentAssets[key]);
-    rw.insertCell(-1).innerHTML = key.toString();
-    rw.insertCell(-1).innerHTML = val.toLocaleString();
-    sum1 += val;
+
+    if(val != 0) {
+      rw = tbl.insertRow(-1);
+
+      rw.insertCell(-1).innerHTML = key.toString();
+      rw.insertCell(-1).innerHTML = val.toLocaleString();
+      sum1 += val;
+    }
 
   }
 
@@ -213,12 +228,15 @@ function makeBalance() {
   td.innerHTML = '<b>Anleggsmidler</b>';
   td.colSpan = 2
   for(key in balance.longTermAssets){
-    rw = tbl.insertRow(-1);
-
     val = parseInt(balance.longTermAssets[key]);
-    rw.insertCell(-1).innerHTML = key.toString();
-    rw.insertCell(-1).innerHTML = val.toLocaleString();
-    sum1 += val;
+
+    if(val != 0) {
+      rw = tbl.insertRow(-1);
+
+      rw.insertCell(-1).innerHTML = key.toString();
+      rw.insertCell(-1).innerHTML = val.toLocaleString();
+      sum1 += val;
+    }
 
   }
 
@@ -233,19 +251,24 @@ function makeBalance() {
   td.innerHTML = '<b>Kortsiktig gjeld</b>';
   td.colSpan = 2;
   for(key in balance.currentLiabilities){
-    j++;
-    if(j < nr){
-      rw = trs[j]
-    }else{
-      rw = tbl.insertRow(-1);
-      rw.insertCell(-1);
-      rw.insertCell(-1);
-    }
 
     val = parseInt(balance.currentLiabilities[key]);
-    rw.insertCell(-1).innerHTML = key.toString();
-    rw.insertCell(-1).innerHTML = val.toLocaleString();
-    sum2 += val;
+
+    if(val != 0) {
+      j++;
+      if(j < nr){
+        rw = trs[j]
+      }else{
+        rw = tbl.insertRow(-1);
+        rw.insertCell(-1);
+        rw.insertCell(-1);
+      }
+
+
+      rw.insertCell(-1).innerHTML = key.toString();
+      rw.insertCell(-1).innerHTML = val.toLocaleString();
+      sum2 += val;
+    }
   }
 
   j++;
@@ -260,19 +283,24 @@ function makeBalance() {
   td.innerHTML = '<b>Langsiktig gjeld</b>';
   td.colSpan = 2;
   for(key in balance.longTermLiabilities){
-    j++;
-    if(j < nr){
-      rw = trs[j]
-    }else{
-      rw = tbl.insertRow(-1);
-      rw.insertCell(-1);
-      rw.insertCell(-1);
-    }
 
     val = parseInt(balance.longTermLiabilities[key]);
-    rw.insertCell(-1).innerHTML = key.toString();
-    rw.insertCell(-1).innerHTML = val.toLocaleString();
-    sum2 += val;
+
+    if(val != 0) {
+      j++;
+      if(j < nr){
+        rw = trs[j]
+      }else{
+        rw = tbl.insertRow(-1);
+        rw.insertCell(-1);
+        rw.insertCell(-1);
+      }
+
+
+      rw.insertCell(-1).innerHTML = key.toString();
+      rw.insertCell(-1).innerHTML = val.toLocaleString();
+      sum2 += val;
+    }
   }
 
   j++;

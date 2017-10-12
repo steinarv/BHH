@@ -37,3 +37,15 @@ function getRandomSubarray(arr, size) {
     }
     return shuffled.slice(0, size);
 }
+
+function dateDiff(d1, d2) {
+  var out = Math.round((d2 - d1) / (1000*60*60*24)) ;
+  return(out);
+}
+
+
+function dateToString(d) {
+  return(d.getDate().toString()
+          + (d.getMonth() + 1).toString()
+          + d.getFullYear().toString());
+}
