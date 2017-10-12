@@ -76,7 +76,7 @@ var assingments = [
             addto(n * 400, balance.currentAssets, 'Varelager');
             addto(n * 400, balance.currentLiabilities, 'Leverandørgjeld');
             payDate = new Date(dateToday.getFullYear(), dateToday.getMonth() + 2, 1);
-            paymentsDue['order' + dateToString(payDate)] = {
+            paymentsDue['order' + dateToString(dateToday)] = {
                                     Date: {d: 1, m: payDate.getMonth() + 1, y: payDate.getYear()},
                                     amount: function(){return(n * 400);},
                                     add1_obj: balance.currentLiabilities['Leverandørgjeld'],

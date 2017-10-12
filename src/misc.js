@@ -43,9 +43,12 @@ function dateDiff(d1, d2) {
   return(out);
 }
 
+function tsd(x) {
+  return( ('0' + x).slice(-2) );
+}
 
 function dateToString(d) {
-  return(d.getDate().toString()
-          + (d.getMonth() + 1).toString()
+  return(tsd(d.getDate())
+          + tsd(d.getMonth() + 1 )
           + d.getFullYear().toString());
 }
