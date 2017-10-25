@@ -93,13 +93,13 @@ var assingments = [
   )},
     mainFunc: function() {
             var n = parseInt(document.getElementById("inSldr").value);
-            addto(n * 400, balance.currentAssets, 'Varelager');
-            addto(n * 400, balance.currentLiabilities, 'Leverandørgjeld');
+            addto(n * 100 + 100000, balance.currentAssets, 'Varelager');
+            addto(n * 100 + 100000, balance.currentLiabilities, 'Leverandørgjeld');
             addto(n, inventory.count, 'PeanutPolishMachine');
             payDate = new Date(dateToday.getFullYear(), dateToday.getMonth() + 2, 1);
             paymentsDue['order' + dateToString(dateToday)] = {
                                     Date: {d: 1, m: payDate.getMonth() + 1, y: payDate.getFullYear()},
-                                    amount: function(){return(n * 400);},
+                                    amount: function(){return(n * 100 + 100000);},
                                     add1_obj: balance.currentLiabilities,
                                     add1_name: 'Leverandørgjeld',
                                     add1_sign: -1,
@@ -113,7 +113,7 @@ var assingments = [
             inventory.detailed['order' + dateToString(dateToday)] = {
               name: 'PeanutPolishMachine',
               n: n,
-              p: 400
+              p: 100 + 100000/n
             };
             this.eventTxt = function(){return(n + ' peanøttpoleringsmaskiner bestilt fra Kina.')};
     },
