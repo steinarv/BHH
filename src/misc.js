@@ -55,6 +55,8 @@ function dateToString(d) {
 
 function dateToString2(d) {
   return(tsd(d.getDate()) + '-' +
-          + tsd(d.getMonth() + 1 ) + '-' + 
+          + tsd(d.getMonth() + 1 ) + '-' +
           + d.getFullYear().toString());
 }
+
+function parseInt2(x){ return( parseInt(Math.round(x)) ); }

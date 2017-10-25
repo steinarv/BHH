@@ -11,7 +11,7 @@ function finishResult() {
 
 
   document.getElementById("divAssingment").innerHTML +=
-    '<br><br>Resultatet ble ' + Math.abs(parseInt(res)).toLocaleString() + ' kroner i '
+    '<br><br>Resultatet ble ' + Math.abs(parseInt2(res)).toLocaleString() + ' kroner i '
     + (res>0?'overskudd':'underskudd') + '.';
 
   // Updata equity in balance
@@ -109,7 +109,7 @@ function checkForPaymentsDue(d) {
           obj.add2_obj[obj.add2_name] += p * obj.add2_sign;
 
           // Add to cashFlowStatement
-          addto(p * parseInt(obj.cfobj_sign), obj.cfobj_obj, obj.cfobj_name);
+          addto(p * parseInt2(obj.cfobj_sign), obj.cfobj_obj, obj.cfobj_name);
 
           document.getElementById('pEvent').innerHTML = dateToString2(dateToday) + ': '
                       + (obj.add2_sign > 0 ? 'Innbetalt' : 'Utbetalt')
@@ -150,7 +150,7 @@ function makeResult() {
       rw = tbl.insertRow(-1);
       rw.insertCell(-1).innerHTML = key.toString();
       rw.insertCell(-1)
-      rw.insertCell(-1).innerHTML = parseInt(val).toLocaleString();
+      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
 
       sumIncome += val;
     }
@@ -167,7 +167,7 @@ function makeResult() {
     if(val != 0){
       rw = tbl.insertRow(-1);
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1).innerHTML = parseInt(val).toLocaleString();
+      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
       rw.insertCell(-1)
 
       sumCost += val;
@@ -186,7 +186,7 @@ function makeResult() {
       rw = tbl.insertRow(-1);
       rw.insertCell(-1).innerHTML = key.toString();
       rw.insertCell(-1)
-      rw.insertCell(-1).innerHTML = parseInt(val).toLocaleString();
+      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
 
       sumIncome += val;
     }
@@ -204,7 +204,7 @@ function makeResult() {
     if(val != 0){
       rw = tbl.insertRow(-1);
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1).innerHTML = parseInt(val).toLocaleString();
+      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
       rw.insertCell(-1);
 
       sumCost += val;
@@ -216,7 +216,7 @@ function makeResult() {
   td = rw.insertCell(-1);
   td.innerHTML = 'Forløpig resultat for ' +
     new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + dayNr).getFullYear();
-  var res = parseInt(sumIncome - sumCost);
+  var res = parseInt2(sumIncome - sumCost);
   if(res > 0) {
     rw.insertCell(-1).innerHTML = (res).toLocaleString();
     rw.insertCell(-1);
@@ -318,7 +318,7 @@ function makeBalance() {
       rw = tbl.insertRow(-1);
 
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1).innerHTML = parseInt(val).toLocaleString();
+      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
       sum1 += val;
     }
 
@@ -335,7 +335,7 @@ function makeBalance() {
       rw = tbl.insertRow(-1);
 
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1).innerHTML = parseInt(val).toLocaleString();
+      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
       sum1 += val;
     }
 
@@ -367,7 +367,7 @@ function makeBalance() {
 
 
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1).innerHTML = parseInt(val).toLocaleString();
+      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
       sum2 += val;
     }
   }
@@ -399,7 +399,7 @@ function makeBalance() {
 
 
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1).innerHTML = parseInt(val).toLocaleString();
+      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
       sum2 += val;
     }
   }
@@ -429,7 +429,7 @@ function makeBalance() {
       }
 
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1).innerHTML = parseInt(val).toLocaleString();
+      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
       sum2 += val;
     }
   }
@@ -446,7 +446,7 @@ function makeBalance() {
     }
 
     rw.insertCell(-1).innerHTML = 'Foreløpig resultat for ' + dateToday.getFullYear();
-    rw.insertCell(-1).innerHTML = parseInt(sum1 - sum2).toLocaleString();
+    rw.insertCell(-1).innerHTML = parseInt2(sum1 - sum2).toLocaleString();
 
     sum2 = sum1;
   }
@@ -454,8 +454,8 @@ function makeBalance() {
 
   // sum row at the end
   rw = tbl.insertRow(-1);
-  rw.insertCell(-1); rw.insertCell(-1).innerHTML = '<u>' + parseInt(sum1).toLocaleString() + '</u>';
-  rw.insertCell(-1); rw.insertCell(-1).innerHTML = '<u>' + parseInt(sum2).toLocaleString() + '</u>';
+  rw.insertCell(-1); rw.insertCell(-1).innerHTML = '<u>' + parseInt2(sum1).toLocaleString() + '</u>';
+  rw.insertCell(-1); rw.insertCell(-1).innerHTML = '<u>' + parseInt2(sum2).toLocaleString() + '</u>';
 }
 
 
@@ -485,7 +485,7 @@ function makeCashFlowStat() {
     if(val != 0){
       rw = tbl.insertRow(-1);
       rw.insertCell(-1).innerHTML = (val > 0 ? '+ ' : '- ') + key.toString();
-      rw.insertCell(-1).innerHTML = parseInt(Math.abs(val)).toLocaleString();
+      rw.insertCell(-1).innerHTML = parseInt2(Math.abs(val)).toLocaleString();
       rw.insertCell(-1);
 
       sum1 += val;
@@ -498,7 +498,7 @@ function makeCashFlowStat() {
     rw = tbl.insertRow(-1);
     rw.insertCell(-1).innerHTML = '<b>= Kontantoverskudd fra drift</b>'
     rw.insertCell(-1);
-    rw.insertCell(-1).innerHTML = parseInt(sum1).toLocaleString();
+    rw.insertCell(-1).innerHTML = parseInt2(sum1).toLocaleString();
   }
 
 
@@ -510,7 +510,7 @@ function makeCashFlowStat() {
     if(val != 0){
       rw = tbl.insertRow(-1);
       rw.insertCell(-1).innerHTML = (val > 0 ? '+ ' : '- ') + key.toString();
-      rw.insertCell(-1).innerHTML = parseInt(Math.abs(val)).toLocaleString();
+      rw.insertCell(-1).innerHTML = parseInt2(Math.abs(val)).toLocaleString();
       rw.insertCell(-1);
 
       sum2 += val;
@@ -524,7 +524,7 @@ function makeCashFlowStat() {
     if(val != 0){
       rw = tbl.insertRow(-1);
       rw.insertCell(-1).innerHTML = (val > 0 ? '+ ' : '- ') + key.toString();
-      rw.insertCell(-1).innerHTML = parseInt(Math.abs(val)).toLocaleString();
+      rw.insertCell(-1).innerHTML = parseInt2(Math.abs(val)).toLocaleString();
       rw.insertCell(-1);
 
       sum2 += val;
@@ -537,7 +537,7 @@ function makeCashFlowStat() {
     rw = tbl.insertRow(-1);
     rw.insertCell(-1).innerHTML = '<b>= Kontantoverskudd fra eiere, lån og investeringer</b>'
     rw.insertCell(-1);
-    rw.insertCell(-1).innerHTML = parseInt(sum2).toLocaleString();
+    rw.insertCell(-1).innerHTML = parseInt2(sum2).toLocaleString();
   }
 
 
@@ -545,5 +545,5 @@ function makeCashFlowStat() {
   rw = tbl.insertRow(-1);
   rw.insertCell(-1).innerHTML = '<b>UB Bankinnskudd</b>'
   rw.insertCell(-1);
-  rw.insertCell(-1).innerHTML = parseInt(cashFlowStatement.ibBank + sum1 + sum2).toLocaleString();
+  rw.insertCell(-1).innerHTML = parseInt2(cashFlowStatement.ibBank + sum1 + sum2).toLocaleString();
 }

@@ -141,7 +141,7 @@ var assingments = [
     mainFunc: function(){
       var p = parseInt(document.getElementById("inSldr").value); //price
       var b = (1500 - 2500)/(340 - 240); var a = 2500 - b * 240;
-      var n = a + b * p; n = Math.max( 0, Math.min(n, parseInt(inventory.count.PeanutPolishMachine)) );
+      var n = a + b * p; n = Math.max( 0, Math.min(n, parseInt2(inventory.count.PeanutPolishMachine)) );
 
       addto(-n, inventory.count, 'PeanutPolishMachine');
       addto(n * p, balance.currentAssets, 'Kundefordringer');
