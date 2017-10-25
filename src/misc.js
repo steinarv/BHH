@@ -52,3 +52,9 @@ function dateToString(d) {
           + tsd(d.getMonth() + 1 )
           + d.getFullYear().toString());
 }
+
+function dateToString2(d) {
+  return(tsd(d.getDate()) + '-' +
+          + tsd(d.getMonth() + 1 ) + '-' + 
+          + d.getFullYear().toString());
+}

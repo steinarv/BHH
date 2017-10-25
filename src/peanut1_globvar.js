@@ -8,3 +8,4 @@ var dateToday;
 var daysSinceUpdatingFinStat = 0;
 
 var evaluateAssingment = true;
+var evaluateYear = false;
