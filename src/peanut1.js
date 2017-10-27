@@ -1,30 +1,22 @@
-nAssignments = Object.keys(assingments).length;
+nAssignments = Object.keys(assignments).length;
 
 
 function onLoadFunc() {
 
-  document.getElementById("tdDate").innerHTML = "Dato: " + dateFormat(baseDate);
-
-  document.getElementById("divAssingment").innerHTML = assingments[0].txtFunc();
-
+  dateToday = baseDate;
   makeBalance();
 
-  addto(100000, cashFlowStatement.financingActivities, 'Aksjonærinnskudd')
+  nxtFunc();
 
-  makeCashFlowStat();
 }
 
 
 function nxtFunc() {
 
   do {
-    dateToday = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + dayNr);
 
-    document.getElementById("tdDate").innerHTML = "Dato: "
-    + dateFormat(dateToday);
-
-    // New year (implement changes)
-    if(evaluateYear) {
+    // If new period, clean up result and cash flow statement
+    if(evaluatePeriod) {
 
       for(var key1 in result)for(var key2 in result[key1])result[key1][key2] = 0;
 
@@ -37,43 +29,56 @@ function nxtFunc() {
       makeResult();
       makeCashFlowStat();
 
-      evaluateYear = false;
+      evaluatePeriod = false;
       document.getElementById('corBtn').disabled = false;
     }
 
     // Implement and evaluate user input
     if(evaluateAssingment){
 
-      assingments[assignmentNr].mainFunc();
-      document.getElementById("pEvent").innerHTML = dateToString2(dateToday) + ': '
-      + assingments[assignmentNr].eventTxt() + '<br>' + document.getElementById("pEvent").innerHTML;
+      assignment.mainFunc();
+      document.getElementById("pEvent").innerHTML = assignment.eventTxt(dateToday)
+                      + '<br>' + document.getElementById("pEvent").innerHTML;
 
-      // Pop up question ----------------------------------------------------------
+      // Pop up question ----------------------------------------------------------?
 
       makeResult();
       makeBalance();
       makeCashFlowStat();
 
       assignmentNr++;
+      if(assignmentNr < nAssignments)assignment = new assignments[assignmentNr](dateToday);
       evaluateAssingment = false;
     }
 
-    // Check of any paymentsDue or raporting dates
-    checkForPaymentsDue(dateToday);
 
     dayNr ++;
+
+    dateToday = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + dayNr);
+    document.getElementById("tdDate").innerHTML = "Dato: "
+    + dateFormat(dateToday);
+
+    // Check of any paymentsDue or raporting dates
+    checkForPaymentsDue(dateToday);
     daysSinceUpdatingFinStat ++;
 
     // Should user unput be requested
-    if(assignmentNr < nAssignments)if(assingments[assignmentNr].dayNr === dayNr){
-      document.getElementById("divAssingment").innerHTML = assingments[assignmentNr].txtFunc();
+    if(assignment === undefined)assignment = new assignments[assignmentNr](dateToday);
+    if(assignment.dayNr === dayNr){
+
+      document.getElementById("divAssingment").innerHTML = assignment.txtFunc(dateToday);
       evaluateAssingment = true;
     }
 
+
+
     // New year --- Evaluate last years result
-    if(dateToday.getDate() === 31 & dateToday.getMonth() === 11){
+    if((dateToday.getDate() === 31 & dateToday.getMonth() === 2) |
+        (dateToday.getDate() === 30 & dateToday.getMonth() === 6) |
+        (dateToday.getDate() === 30 & dateToday.getMonth() === 8) |
+        (dateToday.getDate() === 31 & dateToday.getMonth() === 11)){
       document.getElementById("divAssingment").innerHTML =
-                'Året er omme, endelig resultat og kontantstrømoversikt er nå klart.'
+                'Perioden er omme, endelig resultat og kontantstrømoversikt er nå klart.'
                 + 'Alle korrigeringer skal være implementert i regnskapet.';
 
 
@@ -85,10 +90,10 @@ function nxtFunc() {
 
 
       //document.getElementById("sEvent").innerHTML = '';
-      evaluateYear = true;
+      evaluatePeriod = true;
       document.getElementById('corBtn').disabled = true;
     }
 
-  } while(!evaluateYear & !evaluateAssingment & assignmentNr < nAssignments)
+  } while(!evaluatePeriod & !evaluateAssingment & assignmentNr < nAssignments)
 
 }

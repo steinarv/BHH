@@ -1,11 +1,17 @@
 var assignmentNr = 0;
+var assignment;
 
-var dayNr = 1;
+var dayNr = 0;
 var baseDate = new Date();
-var baseDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + 1, 1);
+baseDate = new Date(baseDate.getFullYear() + 1, 0, 0);
 var dateToday;
 
 var daysSinceUpdatingFinStat = 0;
 
-var evaluateAssingment = true;
-var evaluateYear = false;
+var evaluateAssingment = false;
+var evaluatePeriod = false;
+
+var unitPrice1 = 100;
+var unitPrice2 = 200;
+var freightPrice = 200000;
+function demandFunc(p) {return(500 - 0.2 * p);};

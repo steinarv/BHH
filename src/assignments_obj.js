@@ -33,6 +33,6 @@ assObj = [
     this.alt = function() {
       return( makeAlt(5, this.ansv, 0, 20) );
     };
-    this.hint = 'Se læreboka side 4 - 7 og oppgave 3 i læreboka';
+    this.hint = 'Se læreboka side 4 - 7 og oppgave 3 i oppgaveboka';
   }
 ]

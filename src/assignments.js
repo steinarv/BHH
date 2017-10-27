@@ -1,27 +1,32 @@
 function newAssign() {
-  var frm = document.getElementById('frmAssign');
+  var tbl = document.getElementById("tblAssign");
+  var trs = tbl.getElementsByTagName('tr');
+  var ntr = trs.length;
+  // delete old rows
+  for(i = 1; i <= ntr; i++)tbl.deleteRow(-1);
+  // row variable
+  var rw;
 
-  while (frm.firstChild) {
-    frm.removeChild(frm.firstChild);
-  }
 
   var input, tmptxt;
   var obj = new assObj[0]();
   document.getElementById('pAssign').innerHTML = obj.html;
   var alt  = obj.alt(), ans = obj.ansv;
 
-  var pSol = document.getElementById('pSolution');
-  pSol.innerHTML = 'Hint: ' + obj.hint;
-  pSol.style.display = 'none';
+  var pHint = document.getElementById('pHint');
+  pHint.innerHTML = 'Hint: ' + obj.hint;
+  pHint.style.display = 'none';
 
   for(var i = 0; i < alt.length; i++){
+    rw = tbl.insertRow(-1);
+
     input = document.createElement("input");
     input.type = "radio";
     input.name = "ans";
     input.value = alt[i] == ans;
-    frm.appendChild(input);
-    frm.appendChild(document.createTextNode(' ' + alt[i]));
-    frm.appendChild(document.createElement('br'));
+
+    rw.insertCell(-1).appendChild(input);
+    rw.insertCell(-1).innerHTML = alt[i];
   }
 }
 
@@ -30,13 +35,14 @@ function onLoadFunc() {
 }
 
 
-function ssFunc() {
+function checkSolutionFunc() {
   var rbs = document.getElementsByName("ans");
   var fdBck = document.getElementById('pFeedBack');
   var sScr = document.getElementById('sScr');
   if(sScr.innerHTML === ''){ sScr.innerHTML = 0; }
 
-  var pSol = document.getElementById('pSolution');
+  var pHint = document.getElementById('pHint');
+  var pPrevAssign = document.getElementById('pPrevAssign');
   var ansTxt;
 
   for(var i = 0; i < rbs.length; i++) {
@@ -44,16 +50,17 @@ function ssFunc() {
       fdBck.innerHTML = 'Riktig! Ny oppgave..';
       sScr.innerHTML = parseInt(sScr.innerHTML) + 1;
 
-      ansTxt = document.getElementById('pAssign').innerHTML
-            +  '<br>' + pSol.innerHTML;
-      pSol.innerHTML = ansTxt;
-      pSol.style.display = 'inline';
+      ansTxt = '<b>Forige oppgave:</b> <br>' + document.getElementById('pAssign').innerHTML
+            +  '<br> <b>Svar på denne oppgaven var:</b> <br>'
+            + document.getElementById("tblAssign").getElementsByTagName('tr')[i].cells[1].innerHTML;
+      pPrevAssign.innerHTML = ansTxt;
 
       newAssign();
     }else {
       fdBck.innerHTML = 'Galt, prøv igjen!';
       sScr.innerHTML = parseInt(sScr.innerHTML) - 1;
-      pSol.style.display = 'inline';
+      pHint.style.display = 'inline';
+      pPrevAssign.innerHTML = '';
     }
   }
 

@@ -39,6 +39,11 @@
       width: auto;
       height: 100%;
     }
+
+
+    .table-padd > tbody > tr > td {
+      padding-right: 10px !important;
+    }
 </style>
 </head>
 
@@ -53,13 +58,13 @@
     <div class="panel panel-default">
       <div class="panel-body" id="divAssingment">
         <p id="pAssign"></p>
-        <form action="" id="frmAssign"></form>
+        <table id="tblAssign" class="table-padd"></table>
       </div>
     </div>
     <table class="table">
       <tr>
         <td>
-      <button id="ssBtn" onclick="ssFunc()" class="btn btn-default">Send svar</button>
+      <button id="ssBtn" onclick="checkSolutionFunc()" class="btn btn-default">Send svar</button>
         </td>
         <td>
           <p id=pFeedBack></p>
@@ -69,10 +74,11 @@
         </td>
       </tr>
     </table>
-    <h3>Løsning</h3>
+    <br>
     <div class="panel panel-default">
       <div class="panel-body" id=divAssingment>
-        <p id=pSolution></p>
+        <p id=pHint></p>
+        <p id=pPrevAssign></p>
       </div>
     </div>
   </div>

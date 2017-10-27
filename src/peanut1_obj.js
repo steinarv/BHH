@@ -1,5 +1,5 @@
-var assingments = [
-  {
+var assignments = [
+  /*{
   dayNr:1,
   txtFunc: function() {
     return(
@@ -75,31 +75,41 @@ var assingments = [
           var loan = parseInt(document.getElementById("inSldr").value);
           return("Varebilen ble finansiert med et lån på kroner " + loan.toLocaleString());
     }
-  },
-  {
-    dayNr: 3,
-    txtFunc: function() {
+  },*/
+  function(d) {
+    this.dayNr = 1;
+    function sliderChange(x) {
+      document.getElementById("sSliderVal").innerHTML = x.value.toLocaleString();
+    }
+    this.txtFunc = function() {
       return(
       'Etter å ha forhørt seg litt i markedet, har ErikH&EirikH kommer frem til en tabell'
-    + ' som de mener oppsumerer det månedlige forholdet mellom etterspørsel og pris for'
-    + ' peanøttpoleringsmakiner i nærområdet.'
-    + '<table class="table table"><tr><th>Pris</th><td>240</td><td>340</td></tr>'
-    + '<th>Forventet salg</th><td>2500</td><td>1500</td></tr></table>'
-    + 'Det er tid for å sende en bestilling til produsent, med levering i begynnelsen av'
-    + ' neste måned og betalingsfrist i slutten av neste måned.<br>'
-    + 'Hvor mange maskiner anbefaler du at ErikH$EirikH bestiller?'
-    + '<input id="inSldr" type="range" min="0" max="400" value="0" step="10" onchange="sliderChange(this)" />'
+    + ' som de mener oppsumerer forholdet mellom etterspørsel og pris gjennom inneværende kvartal '
+    + 'for den topp moderne peanøttpoleringsmakinen; <i>PP2000</i> . <br><br>'
+    + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
+    + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
+    + '</td><td>' + demandFunc(500) + '</td></tr></table>'
+    + 'Utover dette er det knyttet større usikkerhet til etterspørselen da det er en rivende '
+    + 'utvikling i peanøttpoleringsmaskinteknologien, og nye modeller kommer stadig på markedet.<br>'
+    + '<br><br>Det er tid for å sende en bestilling til produsent, med levering'
+    + ' neste dag og betalingsfrist ved utgangen av kvartalet.<br>'
+    + 'Prisen fra Hong Kong (inntakskost) for <i>PP2000</i> er kr ' + unitPrice1.toLocaleString()
+    + ' pr enhet. Flyfrakten koster kr ' + freightPrice.toLocaleString() + ' pr flygning.<br>'
+    + 'Hvor mange eksemplarer anbefaler du at ErikH$EirikH bestiller?'
+    + '<input id="inSldr" type="range" min="0" max="500" value="0" '
+    + 'step="10" onchange="sliderChange(this, &quot;sSliderVal&quot;)" />'
     + '<p><span id="sSliderVal">0</span> enheter <p>'
-  )},
-    mainFunc: function() {
+      )};
+    this.mainFunc = function() {
             var n = parseInt(document.getElementById("inSldr").value);
-            addto(n * 100 + 100000, balance.currentAssets, 'Varelager');
-            addto(n * 100 + 100000, balance.currentLiabilities, 'Leverandørgjeld');
+            addto(n * unitPrice1 + freightPrice, balance.currentAssets, 'Varelager');
+            addto(n * unitPrice1 + freightPrice, balance.currentLiabilities, 'Leverandørgjeld');
             addto(n, inventory.count, 'PeanutPolishMachine');
-            payDate = new Date(dateToday.getFullYear(), dateToday.getMonth() + 2, 1);
-            paymentsDue['order' + dateToString(dateToday)] = {
-                                    Date: {d: 1, m: payDate.getMonth() + 1, y: payDate.getFullYear()},
-                                    amount: function(){return(n * 100 + 100000);},
+            payDate = new Date(d.getFullYear(), 3, 0);
+            console.log(payDate);
+            paymentsDue['order' + dateToString(d)] = {
+                                    Date: {d: payDate.getDate(), m: payDate.getMonth() + 1, y: payDate.getFullYear()},
+                                    amount: function(){return(n * unitPrice1 + freightPrice);},
                                     add1_obj: balance.currentLiabilities,
                                     add1_name: 'Leverandørgjeld',
                                     add1_sign: -1,
@@ -110,46 +120,50 @@ var assingments = [
                                     cfobj_name: 'Utbetaling varekjøp',
                                     cfobj_sign: -1
             };
-            inventory.detailed['order' + dateToString(dateToday)] = {
+            inventory.detailed['order' + dateToString(d)] = {
               name: 'PeanutPolishMachine',
               n: n,
-              p: 100 + 100000/n
+              p: unitPrice1 + freightPrice/n
             };
-            this.eventTxt = function(){return(n + ' peanøttpoleringsmaskiner bestilt fra Kina.')};
-    },
-    eventTxt: function(){return(0);}
+            this.eventTxt = function(){
+              return(dateToString2(d) + ': ' + n + ' peanøttpoleringsmaskiner bestilt fra Hong Kong.')
+            };
+    };
+    this.eventTxt = function(){return(0);}
 
   },
-  {
-    dayNr: dateDiff(baseDate, new Date(baseDate.getFullYear(), baseDate.getMonth() + 1, 1)) + 1,
-    txtFunc: function() {
+  function(d) {
+    this.dayNr = 2; //dateDiff(baseDate, new Date(baseDate.getFullYear(), baseDate.getMonth() + 1, 1)) + 1,
+    this.txtFunc = function() {
       var n = 0;
       for(var key in inventory)
       return(
       'Da er varene ankommet og du skal nå bestemme en utsalgspris.<br>'
-    + 'Vi gjentar forholdet mellom pris og etterspørsel (per måned) i tabllen under: <br>'
-    + '<table class="table table"><tr><th>Pris</th><td>240</td><td>340</td></tr>'
-    + '<th>Forventet salg</th><td>2500</td><td>1500</td></tr></table>'
-    + 'For enkelhets skyld så setter vi betalingfrist den 15 i påfølgende måned for alle som kjøper i løpet'
-    + ' av en måned.'
-    + 'Utsalgspris for peanøttpoleringsmakinene:'
-    + '<input id="inSldr" type="range" min="0" max="1000" value="0" step="10" onchange="sliderChange(this)" />'
+    + 'Vi gjentar forholdet mellom pris og etterspørsel (per kvartal) i tabllen under: <br>'
+    + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
+    + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
+    + '</td><td>' + demandFunc(500) + '</td></tr></table>'
+    + 'For enkelhets skyld så setter vi betalingfrist ved utløpet av kvartalet for alle som kjøper i løpet'
+    + ' av en kvartalet.<br>'
+    + 'Velg utsalgspris for  <i>PP2000</i>:'
+    + '<input id="inSldr" type="range" min="0" max="2000" value="0"'
+    + ' step="50" onchange="sliderChange(this, &quot;sSliderVal&quot;)" />'
     + '<p><span id="sSliderVal">0</span> kr <p>'
     + '<br>(Det finnes '+  inventory.count.PeanutPolishMachine.toLocaleString() + ' varer på lager)'
-  )},
+      )};
     //+ '<br>(Det finnes '+ balance.currentAssets['Varelager'].toLocaleString() + ' varer på lager)',
-    mainFunc: function(){
+    this.mainFunc = function(){
       var p = parseInt(document.getElementById("inSldr").value); //price
-      var b = (1500 - 2500)/(340 - 240); var a = 2500 - b * 240;
-      var n = a + b * p; n = Math.max( 0, Math.min(n, parseInt2(inventory.count.PeanutPolishMachine)) );
+
+      var n = demandFunc(p); n = Math.max( 0, Math.min(n, parseInt2(inventory.count.PeanutPolishMachine)) );
 
       addto(-n, inventory.count, 'PeanutPolishMachine');
       addto(n * p, balance.currentAssets, 'Kundefordringer');
       addto(n * p, result.operatingIncome, 'Salgsinntekt');
 
-      payDate = new Date(dateToday.getFullYear(), dateToday.getMonth() + 2, 1);
-      paymentsDue['sale' + dateToString(dateToday)] = {
-                              Date: {d: 1, m: payDate.getMonth() + 1, y: payDate.getFullYear()},
+      payDate = new Date(d.getFullYear(), 3, 0);
+      paymentsDue['sale' + dateToString(d)] = {
+                              Date: {d: payDate.getDate(), m: payDate.getMonth() + 1, y: payDate.getFullYear()},
                               amount: function(){return(n * p);},
                               add1_obj: balance.currentAssets,
                               add1_name: 'Kundefordringer',
@@ -161,35 +175,97 @@ var assingments = [
                               cfobj_name: 'Innbetaling fra kunder',
                               cfobj_sign: 1
       };
-      this.eventTxt = function(){return(n + " varer ble solgt for " + p + "kroner per stk.");}
 
-    },
-    eventTxt: function(){return('');}
+      this.eventTxt = function(){
+        var d_ = new Date(d.getFullYear(), d.getMonth() + 3, 0);
+        return(dateToString2(d_) + ': ' + n
+          + " peanøttpoleringsmaskiner ble i løpet av kvartalet solgt for " + p
+          + " kroner per stk."
+        );
+      }
+
+    };
+    this.eventTxt = function(){return('');};
 
   },
-  {
-    dayNr: dateDiff(baseDate, new Date(baseDate.getFullYear(), baseDate.getMonth() + 3, 1)) + 1,
-    txtFunc: function() {
+  function(d) {
+    this.dayNr = dateDiff(baseDate, new Date(baseDate.getFullYear(), baseDate.getMonth() + 4, 1));
+    function sliderChange(x) {
+      document.getElementById("sSliderVal").innerHTML = x.value.toLocaleString();
+    }
+    this.txtFunc = function() {
+      return(
+      'Salget av <i>PP2000</i> ble som forventet, hele kvartalet sett under ett.'
+    + 'Likevel så merket man et brå nedgang i salget mot slutten av perioden.<br>'
+    + 'Man regner med at dette skyldes den nyeste modellen peanøttpoleringsmaskin <i>P10000</i>.'
+    + 'som har tatt markedet med storm. <br>Grunnet mer avansert teknologi er denne noe dyrere'
+    + ' i innkjøp (' + unitPrice2.toLocaleString() + '<br>'
+    + ' kroner per stk.). Etterspørselen gjennom neste kvartal forventes å være tilsvarende forrige modell<br><br>'
+    + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
+    + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
+    + '</td><td>' + demandFunc(500) + '</td></tr></table>'
+    + 'Flyfrakten fra Hong Kong for <i>P10000</i> er lik fortsatt '
+    + freightPrice.toLocaleString() + ' pr flygning.<br>'
+    + 'Hvor mange eksemplarer anbefaler du at ErikH$EirikH bestiller av denne?'
+    + '<input id="inSldr" type="range" min="0" max="500" value="0" '
+    + 'step="10" onchange="sliderChange(this, &quot;sSliderVal&quot;)" />'
+    + '<p><span id="sSliderVal">0</span> enheter <p>'
+      )};
+    this.mainFunc = function() {
+            var n = parseInt(document.getElementById("inSldr").value);
+            addto(n * unitPrice2 + freightPrice, balance.currentAssets, 'Varelager');
+            addto(n * unitPrice2 + freightPrice, balance.currentLiabilities, 'Leverandørgjeld');
+            addto(n, inventory.count, 'PeanutPolishMachine');
+            payDate = new Date(d.getFullYear(), d.getMonth() + 3, 0);
+            console.log(payDate);
+            paymentsDue['order' + dateToString(d)] = {
+                                    Date: {d: payDate.getDate(), m: payDate.getMonth() + 1, y: payDate.getFullYear()},
+                                    amount: function(){return(n * unitPrice2 + freightPrice);},
+                                    add1_obj: balance.currentLiabilities,
+                                    add1_name: 'Leverandørgjeld',
+                                    add1_sign: -1,
+                                    add2_obj: balance.currentAssets,
+                                    add2_name: 'Bankinnskudd',
+                                    add2_sign: -1,
+                                    cfobj_obj: cashFlowStatement.operatingActivities,
+                                    cfobj_name: 'Utbetaling varekjøp',
+                                    cfobj_sign: -1
+            };
+            inventory.detailed['order' + dateToString(d)] = {
+              name: 'PeanutPolishMachine',
+              n: n,
+              p: unitPrice2 + freightPrice/n
+            };
+            this.eventTxt = function(){
+              return(dateToString2(d) + ': ' + n + ' peanøttpoleringsmaskiner bestilt fra Hong Kong.')
+            };
+    };
+    this.eventTxt = function(){return(0);}
+
+  }/*,
+  function(d) {
+    this.dayNr = dateDiff(baseDate, new Date(baseDate.getFullYear(), baseDate.getMonth() + 3, 1)) + 1;
+    this.txtFunc = function() {
       return(
         'Spillet er over. Du kan utforske resultat og balanse under. <br>'
-      )},
-    mainFunc: function(){
+    )};
+    this.mainFunc = function(){
       // Maybe some scoring and vizualisation here
       document.getElementById('nxtBtn').disabled = true;
       //document.getElementById("pEvent").innerHTML = '<br>';
-    },
-    eventTxt: function(){return(' ');}
+    };
+    this.eventTxt = function(){return(' ');};
 
-  }
+  }*/
 ];
 
 
 
-var balance = { currentAssets: {"Bankinnskudd": 100000},
+var balance = { currentAssets: {"Bankinnskudd": 200000},
                 longTermAssets: {},
                 currentLiabilities: {},
                 longTermLiabilities: {},
-                shareholdersEquity: {"Aksjekapital": 100000,
+                shareholdersEquity: {"Aksjekapital": 200000,
                                      "Udekket tap": 0,
                                      "Annen egenkapital": 0}
               };
@@ -223,7 +299,7 @@ var paymentsDue = {
 
 
 var cashFlowStatement = {
-  ibBank: 0,
+  ibBank: 200000,
   operatingActivities: {},
   investingActivities: {},
   financingActivities: {}

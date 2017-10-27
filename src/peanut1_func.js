@@ -275,22 +275,10 @@ function dateFormat(d) {
 
 
 
-function sliderChange(x) {
-
-  document.getElementById("sSliderVal").innerHTML = x.value.toLocaleString();
+function sliderChange(x, id) {
+  //alert(id);
+  document.getElementById(id).innerHTML = x.value.toLocaleString();
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
