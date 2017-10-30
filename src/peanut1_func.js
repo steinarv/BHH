@@ -1,3 +1,58 @@
+function buyFunc(d, item, n, price, freight) {
+
+  addto(n * price + freight, balance.currentAssets, 'Varelager');
+  addto(n * price + freight, balance.currentLiabilities, 'Leverandørgjeld');
+  addto(n, inventory.count, item);
+  payDate = new Date(d.getFullYear(), 3, 0);
+  console.log(payDate);
+  paymentsDue['order' + dateToString(d)  + item] = {
+                          Date: {d: payDate.getDate(), m: payDate.getMonth() + 1, y: payDate.getFullYear()},
+                          amount: n * price + freight,
+                          add1_obj: balance.currentLiabilities,
+                          add1_name: 'Leverandørgjeld',
+                          add1_sign: -1,
+                          add2_obj: balance.currentAssets,
+                          add2_name: 'Bankinnskudd',
+                          add2_sign: -1,
+                          cfobj_obj: cashFlowStatement.operatingActivities,
+                          cfobj_name: 'Utbetaling varekjøp',
+                          cfobj_sign: -1
+  };
+  inventory.detailed['order' + dateToString(d) + item] = {
+    name: item,
+    n: n,
+    p: price + freight/n
+  };
+
+  return(dateToString2(payDate) + ':' + n + ' stk. ' + item + ' bestilt for kroner ' + price + ' per stk. <br>');
+}
+
+function sellFunc(d, item, n, price) {
+  n = Math.max( 0, Math.min(n, inventory.count[item]) );
+
+  addto(-n, inventory.count, item);
+  addto(n * price, balance.currentAssets, 'Kundefordringer');
+  addto(n * price, result.operatingIncome, 'Salgsinntekt');
+
+  payDate = new Date(d.getFullYear(), 3, 0);
+  paymentsDue['sale' + dateToString(d) + item] = {
+                          Date: {d: payDate.getDate(), m: payDate.getMonth() + 1, y: payDate.getFullYear()},
+                          amount: n * price,
+                          add1_obj: balance.currentAssets,
+                          add1_name: 'Kundefordringer',
+                          add1_sign: -1,
+                          add2_obj: balance.currentAssets,
+                          add2_name: 'Bankinnskudd',
+                          add2_sign: 1,
+                          cfobj_obj: cashFlowStatement.operatingActivities,
+                          cfobj_name: 'Innbetaling fra kunder',
+                          cfobj_sign: 1
+  };
+
+  return(dateToString2(payDate) + ':' + n + ' stk. ' + item + ' ble solgt for kroner ' + price + '.<br>');
+}
+
+
 function finishResult() {
 
   var trs = document.getElementById("tbResult").getElementsByTagName('tr');
@@ -104,7 +159,7 @@ function checkForPaymentsDue(d) {
       if(dDate.m === (d.getMonth() + 1) | dDate.m === 0){
         if(dDate.y === d.getFullYear() | dDate.y === 0){
           obj = paymentsDue[key];
-          p = obj.amount();
+          p = obj.amount;
           obj.add1_obj[obj.add1_name] += p * obj.add1_sign;
           obj.add2_obj[obj.add2_name] += p * obj.add2_sign;
 
@@ -275,9 +330,9 @@ function dateFormat(d) {
 
 
 
-function sliderChange(x, id) {
+function sliderChange(x) {
   //alert(id);
-  document.getElementById(id).innerHTML = x.value.toLocaleString();
+  document.getElementById('s_' + x.id).innerHTML = x.value.toLocaleString();
 }
 
 

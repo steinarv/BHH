@@ -11,6 +11,10 @@ var daysSinceUpdatingFinStat = 0;
 var evaluateAssingment = false;
 var evaluatePeriod = false;
 
+var unitPrice = {
+  PP2000: 100,
+  P10000: 200
+}
 var unitPrice1 = 100;
 var unitPrice2 = 200;
 var freightPrice = 200000;

@@ -65,9 +65,10 @@ function nxtFunc() {
     // Should user unput be requested
     if(assignment === undefined)assignment = new assignments[assignmentNr](dateToday);
     if(assignment.dayNr === dayNr){
+      evaluateAssingment = true;
 
       document.getElementById("divAssingment").innerHTML = assignment.txtFunc(dateToday);
-      evaluateAssingment = true;
+      // above function may disable next button and set evaluateAssingment to false if lasst.
     }
 
 
