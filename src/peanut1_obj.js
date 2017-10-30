@@ -76,22 +76,22 @@ var assignments = [
           return("Varebilen ble finansiert med et lån på kroner " + loan.toLocaleString());
     }
   },*/
-  function(d) {
-    this.dayNr = 1;
+  function() {
+    d = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + 1);
+    console.log("Assignment 1: ", dateToString2(d));
+    this.dayNr = this.dayNr = dateDiff(baseDate, d);;
     function sliderChange(x) {
       document.getElementById("sSliderVal").innerHTML = x.value.toLocaleString();
     }
     this.txtFunc = function() {
       return(
-      'Etter å ha forhørt seg litt i markedet, har ErikH&EirikH kommer frem til en tabell'
+      'Etter å ha forhørt seg litt i markedet, har ErikH&EirikH kommer frem til en tabell. <br>'
     + ' som de mener oppsumerer forholdet mellom etterspørsel og pris gjennom inneværende kvartal '
     + 'for den topp moderne peanøttpoleringsmakinen; <i>PP2000</i> . <br><br>'
     + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
     + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
     + '</td><td>' + demandFunc(500) + '</td></tr></table>'
-    + 'Lengre frem i tid er det knyttet større usikkerhet til etterspørselen da det er en rivende '
-    + 'utvikling i peanøttpoleringsmaskinteknologien, og nye modeller kommer stadig på markedet.<br>'
-    + '<br><br>Det er tid for å sende en bestilling til produsent, med levering'
+    + '<br><br><br>Det er tid for å sende en bestilling til produsent, med levering'
     + ' neste dag og betalingsfrist ved utgangen av kvartalet.<br>'
     + 'Prisen fra Hong Kong (inntakskost) for <i>PP2000</i> er kr ' + unitPrice1.toLocaleString()
     + ' pr enhet. Flyfrakten koster kr ' + freightPrice.toLocaleString() + ' pr flygning.<br>'
@@ -108,24 +108,16 @@ var assignments = [
       )};
     this.mainFunc = function() {
             sEventTxt = '';
-            // Register merchendise in! ..............................................................................
-            var sldrs = document.getElementsByName('sldrBuy');
-            for(var i = 0; i < sldrs.length; i++){
-              var item = sldrs[i].id.split('_')[1];
-              var n_buy = document.getElementById('in_' + item + '_n').valueAsNumber;
 
-              sEventTxt += buyFunc(d, item, n_buy, unitPrice[item], freightPrice);
-            }
+            var item1 = 'PP2000';
+            var n_buy1 = document.getElementById('in_' + item1 + '_n').valueAsNumber;
+            var p_sale1 = document.getElementById('in_' + item1 + '_p').valueAsNumber; //price
+            var n_sale1 = demandFunc(p_sale1);
+            // Register merchendise in! ..............................................................................
+            sEventTxt += buyFunc(d, item1, n_buy1, unitPrice[item1], freightPrice);
 
             // Register merchendise out! ..............................................................................
-            var sldrs = document.getElementsByName('sldrPrice');
-            for(var i = 0; i < sldrs.length; i++){
-              var item = sldrs[i].id.split('_')[1];
-              var p_sale = document.getElementById('in_' + item + '_p').valueAsNumber; //price
-              var n_sale = demandFunc(p_sale);
-
-              sEventTxt += sellFunc(d, item, n_sale, p_sale)
-            }
+            sEventTxt = sellFunc(d, item1, n_sale1, p_sale1) + sEventTxt;
 
             // Event report..............................................................................................
             this.eventTxt = function(){
@@ -139,122 +131,152 @@ var assignments = [
 
   },
   //salget gikk dårligere enn forventet pga dårlig vær hard vinter, etterspørselen ser ut til å ta seg opp ---> lik etterspørselsfunksjon
-  function(d) {
-    this.dayNr = dateDiff(baseDate, new Date(baseDate.getFullYear(), baseDate.getMonth() + 4, 1));
+  // Dropp dennne, ta eventuelt til slutt!
+  function() {
+    d = new Date(baseDate.getFullYear(), baseDate.getMonth() + 4, 1);
+    console.log("Assignment 2: ", dateToString2(d));
+    this.dayNr = dateDiff(baseDate, d);
     function sliderChange(x) {
       document.getElementById("sSliderVal").innerHTML = x.value.toLocaleString();
     }
     this.txtFunc = function() {
-      return(
-      'Salget av <i>PP2000</i> ble som forventet, hele dette kvartalet sett under ett.'
-    + 'Likevel merket man et brå nedgang i salget mot slutten av perioden.<br>'
-    + 'Man regner med at dette skyldes den nyeste modellen peanøttpoleringsmaskin <i>P10000</i>.'
-    + 'som har tatt markedet med storm. <br>Grunnet mer avansert teknologi er denne noe dyrere'
-    + ' i innkjøp (' + unitPrice2.toLocaleString() + '<br>'
-    + ' kroner per stk.). Etterspørselen gjennom neste kvartal forventes å være tilsvarende forrige modell<br><br>'
-    + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
-    + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
-    + '</td><td>' + demandFunc(500) + '</td></tr></table>'
-    + 'Flyfrakten fra Hong Kong for <i>P10000</i> er lik fortsatt '
-    + freightPrice.toLocaleString() + ' pr flygning.<br>'
-    + 'Hvor mange eksemplarer anbefaler du at ErikH$EirikH bestiller av denne?'
-    + '<input id="inSldr" type="range" min="0" max="500" value="0" '
-    + 'step="10" onchange="sliderChange(this, &quot;sSliderVal&quot;)" />'
-    + '<p><span id="sSliderVal">0</span> enheter <p>'
-      )};
+
+      var inventoryTxt = '<br>';
+      if(inventory.count["PP2000"] > 0) {
+        inventoryTxt += '(Det er ' + inventory.count["PP2000"].toLocaleString()
+        + ' enheter med <i>PP2000</i> igjen på lager.) <br>';
+      }
+
+
+      outTxt =
+      'Grunnet en uvanlig hard vinter ble ikke salget av <i>PP2000</i> helt som foventet. '
+      + 'Man forventer at dette er et fobigående fenomen, og at forholdet mellom pris og etterspørsel,'
+      + ' i neste kvartal vil være tilsvarende det man forventet for foregående periode:<br><br>'
+      + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
+      + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
+      + '</td><td>' + demandFunc(500) + '</td></tr></table>'
+      + 'Lengre frem i tid er det knyttet større usikkerhet til etterspørselen da det er en rivende '
+      + 'utvikling i peanøttpoleringsmaskinteknologien, og nye modeller kommer stadig på markedet.<br>'
+      + '<br><br>'
+      + 'Prisen fra Hong Kong (inntakskost) for <i>PP2000</i> er fortsatt kr ' + unitPrice["PP2000"].toLocaleString()
+      + ' pr enhet. Flyfrakten koster kr ' + freightPrice.toLocaleString() + ' pr flygning.<br>'
+      + 'Hvor mange eksemplarer anbefaler du at ErikH$EirikH bestiller denne gangen?'
+      + inventoryTxt + '<br>'
+      + '<input id="in_PP2000_n" type="range" min="0" max="500" value="0" name = "sldrBuy"'
+      + 'step="10" onchange="sliderChange(this)" />'
+      + '<p><span id="s_in_PP2000_n">0</span> enheter <p>'
+      + '<br> Markedsføringen av de bestilte peanøttpoleringsmakinene starter umiddelbart,'
+      + ' og prisen må derfor også bestemmes: <br>'
+      + '<input id="in_PP2000_p" type="range" min="0" max="2000" value="0" name = "sldrPrice"'
+      + ' step="50" onchange="sliderChange(this)" />'
+      + '<p><span id="s_in_PP2000_p">0</span> kr <p>'
+      + '<br>Når du nå trykker neste, vil vi bevege oss tre måneder frem i tid for å se resultatet av dine beslutnigner...<br>';
+
+      return(outTxt);
+    };
     this.mainFunc = function() {
-            var n = parseInt(document.getElementById("inSldr").value);
-            addto(n * unitPrice2 + freightPrice, balance.currentAssets, 'Varelager');
-            addto(n * unitPrice2 + freightPrice, balance.currentLiabilities, 'Leverandørgjeld');
-            addto(n, inventory.count, 'P10000');
-            payDate = new Date(d.getFullYear(), d.getMonth() + 3, 0);
-            console.log(payDate);
-            paymentsDue['order' + dateToString(d)] = {
-                                    Date: {d: payDate.getDate(), m: payDate.getMonth() + 1, y: payDate.getFullYear()},
-                                    amount: function(){return(n * unitPrice2 + freightPrice);},
-                                    add1_obj: balance.currentLiabilities,
-                                    add1_name: 'Leverandørgjeld',
-                                    add1_sign: -1,
-                                    add2_obj: balance.currentAssets,
-                                    add2_name: 'Bankinnskudd',
-                                    add2_sign: -1,
-                                    cfobj_obj: cashFlowStatement.operatingActivities,
-                                    cfobj_name: 'Utbetaling varekjøp',
-                                    cfobj_sign: -1
-            };
-            inventory.detailed['order' + dateToString(d)] = {
-              name: 'P10000',
-              n: n,
-              p: unitPrice2 + freightPrice/n
-            };
+            sEventTxt = '';
+
+            var item1 = 'PP2000';
+            var n_buy1 = document.getElementById('in_' + item1 + '_n').valueAsNumber;
+            var p_sale1 = document.getElementById('in_' + item1 + '_p').valueAsNumber; //price
+            var n_sale1 = demandFunc(p_sale1);
+            // Register merchendise in! ..............................................................................
+            sEventTxt += buyFunc(d, item1, n_buy1, unitPrice[item1], freightPrice);
+
+            // Register merchendise out! ..............................................................................
+            sEventTxt = sellFunc(d, item1, n_sale1, p_sale1) + sEventTxt;
+
+
+            // Event report..............................................................................................
             this.eventTxt = function(){
-              return(dateToString2(d) + ': ' + n + ' peanøttpoleringsmaskiner bestilt fra Hong Kong.')
+              // Date reported here should be more carefully decided
+              return(sEventTxt);
             };
+            // Update financial statement after first quarter
+            corFunc();
+    };
+    this.eventTxt = function(){return(0);}
+
+  },
+  function() {
+    d = new Date(baseDate.getFullYear(), baseDate.getMonth() + 7, 1);
+    this.dayNr = this.dayNr = dateDiff(baseDate, d);
+    function sliderChange(x) {
+      document.getElementById("sSliderVal").innerHTML = x.value.toLocaleString();
+    }
+    this.txtFunc = function() {
+      outTxt =
+      'Salget av <i>PP2000</i> ble som forventet, hele dette kvartalet sett under ett.'
+      + 'Likevel merket man et brå nedgang i salget mot slutten av perioden.<br>'
+      + 'Man regner med at dette skyldes den nyeste modellen peanøttpoleringsmaskin <i>P10000</i>.'
+      + 'som har tatt markedet med storm. <br>Grunnet mer avansert teknologi er denne noe dyrere'
+      + ' i innkjøp (' + unitPrice["P10000"].toLocaleString() + ' kroner per stk.).<br>'
+      + 'Etterspørselen gjennom neste kvartal forventes å være tilsvarende forrige modell<br><br>'
+      + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
+      + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
+      + '</td><td>' + demandFunc(500) + '</td></tr></table>'
+      + 'Flyfrakten fra Hong Kong for <i>P10000</i> er lik fortsatt '
+      + freightPrice.toLocaleString() + ' pr flygning.<br>'
+      + '<input id="in_P10000_n" type="range" min="0" max="500" value="0" name = "sldrBuy"'
+      + 'step="10" onchange="sliderChange(this)" />'
+      + '<p><span id="s_in_P10000_n">0</span> enheter <p>'
+      + '<br> Markedsføringen av de bestilte peanøttpoleringsmakinene starter umiddelbart,'
+      + ' og prisen må derfor også bestemmes: <br>'
+      + '<input id="in_P10000_p" type="range" min="0" max="2000" value="0" name = "sldrPrice"'
+      + ' step="50" onchange="sliderChange(this)" />'
+      + '<p><span id="s_in_P10000_p">0</span> kr <p>';
+
+      var inventoryTxt = '<br>';
+      if(inventory.count["PP2000"] > 0) {
+        inventoryTxt += '(Det er ' + inventory.count["PP2000"].toLocaleString()
+        + ' enheter med <i>PP2000</i> igjen på lager.) <br>'
+        + 'Lokal etterspørsel etter disse er nå nærmest fraværende, men noen steder i Afrika'
+        + ' er disse fortsatt veldig populære grunnet holdbarhet og tilgang på reservedeler.<br>'
+        + 'Betalingsviligheten er likevel lav, da det ryktes at flere grossister sitter inne med store'
+        + 'overskuddslagere.<br>For øyeblikket er eksportørene villige til å betale 75 kroner per stk.'
+        + ' for så mange enheter de klarer å få tak i. Bør ErikH&EirikH selge resten av lageret til denne prisen?<br>'
+        + '<input type="radio" name="selRest" id="rbYes"> Ja <br>'
+        + '<input type="radio" name="selRest" > Nei';
+      }
+
+      return(outTxt + inventoryTxt)
+    };
+    this.mainFunc = function() {
+      sEventTxt = '';
+
+      var item1 = 'P10000';
+      var n_buy1 = document.getElementById('in_' + item1 + '_n').valueAsNumber;
+      var p_sale1 = document.getElementById('in_' + item1 + '_p').valueAsNumber; //price
+      var n_sale1 = demandFunc(p_sale1);
+      // Register merchendise in! ..............................................................................
+      sEventTxt += buyFunc(d, item1, n_buy1, unitPrice[item1], freightPrice);
+
+      // Register merchendise out! ..............................................................................
+      sEventTxt = sellFunc(d, item1, n_sale1, p_sale1) + sEventTxt;
+
+
+      if(document.getElementById("rbYes").checked) {
+        var item2 = 'PP2000'
+        var p_sale2 = 75;
+        var n_sale2 = inventory.count[item2];
+        sEventTxt = sellFunc(d, item2, n_sale2, p_sale2) + sEventTxt;
+      }
+
+
+      // Event report..............................................................................................
+      this.eventTxt = function(){
+        // Date reported here should be more carefully decided
+        return(sEventTxt);
+      };
+      // Update financial statement after first quarter
+      corFunc();
     };
     this.eventTxt = function(){return(0);}
 
   },
   // Mulighet til å selge i differensiert marked................................................................................................
-  function(d) {
-    this.dayNr = dateDiff(baseDate, new Date(baseDate.getFullYear(), baseDate.getMonth() + 4, 2));
-    this.txtFunc = function() {
-      //var n = 0;
-      //for(var key in inventory)
-      var outTxt =
-      'Nye varer er ankommet og utsalgspris må bestemmes.<br>'
-    + 'Forholdet mellom pris og etterspørsel (per kvartal) for <i>P10000</i>: <br>'
-    + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
-    + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
-    + '</td><td>' + demandFunc(500) + '</td></tr></table>'
-    + 'For enkelhets skyld så setter vi betalingfrist ved utløpet av kvartalet for alle som kjøper i løpet'
-    + ' av en kvartalet.<br>'
-    + 'Utsalgspris for  <i>P10000</i>:'
-    + '<input id="inSldr" type="range" min="0" max="2000" value="0" name="sldrs"'
-    + ' step="50" onchange="sliderChange(this, &quot;sSliderVal&quot;)" />'
-    + '<p><span id="sSliderVal">0</span> kr <p>'
-    + '<br>(Det finnes '+  inventory.count.P10000.toLocaleString() + ' varer på lager)';
-
-      return(outTxt)
-      };
-    //+ '<br>(Det finnes '+ balance.currentAssets['Varelager'].toLocaleString() + ' varer på lager)',
-    this.mainFunc = function(){
-
-        //for(sldr in document.getElementsByTagName('sldrs'))
-      var p = parseInt(document.getElementById("inSldr").value); //price
-
-      var n = demandFunc(p); n = Math.max( 0, Math.min(n, parseInt2(inventory.count.PeanutPolishMachine)) );
-
-      addto(-n, inventory.count, 'PeanutPolishMachine');
-      addto(n * p, balance.currentAssets, 'Kundefordringer');
-      addto(n * p, result.operatingIncome, 'Salgsinntekt');
-
-      payDate = new Date(d.getFullYear(), 3, 0);
-      paymentsDue['sale' + dateToString(d)] = {
-                              Date: {d: payDate.getDate(), m: payDate.getMonth() + 1, y: payDate.getFullYear()},
-                              amount: function(){return(n * p);},
-                              add1_obj: balance.currentAssets,
-                              add1_name: 'Kundefordringer',
-                              add1_sign: -1,
-                              add2_obj: balance.currentAssets,
-                              add2_name: 'Bankinnskudd',
-                              add2_sign: 1,
-                              cfobj_obj: cashFlowStatement.operatingActivities,
-                              cfobj_name: 'Innbetaling fra kunder',
-                              cfobj_sign: 1
-      };
-
-      this.eventTxt = function(){
-        var d_ = new Date(d.getFullYear(), d.getMonth() + 3, 0);
-        return(dateToString2(d_) + ': ' + n
-          + " peanøttpoleringsmaskiner ble i løpet av kvartalet solgt for " + p
-          + " kroner per stk."
-        );
-      }
-
-    };
-    this.eventTxt = function(){return('');};
-
-  }/*,
+  /*,
   function(d) {
     this.dayNr = dateDiff(baseDate, new Date(baseDate.getFullYear(), baseDate.getMonth() + 3, 1)) + 1;
     this.txtFunc = function() {

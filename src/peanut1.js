@@ -30,7 +30,7 @@ function nxtFunc() {
       makeCashFlowStat();
 
       evaluatePeriod = false;
-      document.getElementById('corBtn').disabled = false;
+      //document.getElementById('corBtn').disabled = false;
     }
 
     // Implement and evaluate user input
@@ -47,6 +47,7 @@ function nxtFunc() {
       makeCashFlowStat();
 
       assignmentNr++;
+      console.log("Creating new assignment: ", dateToString2(dateToday));
       if(assignmentNr < nAssignments)assignment = new assignments[assignmentNr](dateToday);
       evaluateAssingment = false;
     }
@@ -55,8 +56,7 @@ function nxtFunc() {
     dayNr ++;
 
     dateToday = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + dayNr);
-    document.getElementById("tdDate").innerHTML = "Dato: "
-    + dateFormat(dateToday);
+    document.getElementById("tdDate").innerHTML = "Dato: " + dateFormat(dateToday);
 
     // Check of any paymentsDue or raporting dates
     checkForPaymentsDue(dateToday);
@@ -92,7 +92,7 @@ function nxtFunc() {
 
       //document.getElementById("sEvent").innerHTML = '';
       evaluatePeriod = true;
-      document.getElementById('corBtn').disabled = true;
+      // document.getElementById('corBtn').disabled = true;
     }
 
   } while(!evaluatePeriod & !evaluateAssingment & assignmentNr < nAssignments)

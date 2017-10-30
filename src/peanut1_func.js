@@ -3,8 +3,9 @@ function buyFunc(d, item, n, price, freight) {
   addto(n * price + freight, balance.currentAssets, 'Varelager');
   addto(n * price + freight, balance.currentLiabilities, 'Leverandørgjeld');
   addto(n, inventory.count, item);
-  payDate = new Date(d.getFullYear(), 3, 0);
-  //console.log(payDate);
+  //console.log('Buying: ' + dateToString2(d));
+  payDate = new Date(d.getFullYear(), d.getMonth() + 3, 0);
+  //console.log('Pay date: ' + dateToString2(payDate));
   paymentsDue['order' + dateToString(d)  + item] = {
                           Date: {d: payDate.getDate(), m: payDate.getMonth() + 1, y: payDate.getFullYear()},
                           amount: n * price + freight,
@@ -34,7 +35,7 @@ function sellFunc(d, item, n, price) {
   addto(n * price, balance.currentAssets, 'Kundefordringer');
   addto(n * price, result.operatingIncome, 'Salgsinntekt');
 
-  payDate = new Date(d.getFullYear(), 3, 0);
+  payDate = new Date(d.getFullYear(), d.getMonth() + 3, 0);
   paymentsDue['sale' + dateToString(d) + item] = {
                           Date: {d: payDate.getDate(), m: payDate.getMonth() + 1, y: payDate.getFullYear()},
                           amount: n * price,
@@ -173,6 +174,7 @@ function checkForPaymentsDue(d) {
                       + obj.add2_name + '.'
                       + '<br>' + document.getElementById('pEvent').innerHTML;
 
+          //If non repeating (no zeros) remove...            
           if(!bool1)bool1 = true;
         }
       }
