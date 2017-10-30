@@ -132,66 +132,13 @@ var assignments = [
               // Date reported here should be more carefully decided
               return(sEventTxt);
             };
+            // Update financial statement after first quarter
+            corFunc();
     };
     this.eventTxt = function(){return(0);}
 
   },
-  function(d) {
-    this.dayNr = 2; //dateDiff(baseDate, new Date(baseDate.getFullYear(), baseDate.getMonth() + 1, 1)) + 1,
-    this.txtFunc = function() {
-
-      return(
-      'Da er varene ankommet og du skal nå bestemme en utsalgspris.<br>'
-    + 'Vi gjentar forholdet mellom pris og etterspørsel (per kvartal) i tabllen under: <br>'
-    + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
-    + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
-    + '</td><td>' + demandFunc(500) + '</td></tr></table>'
-    + 'For enkelhets skyld så setter vi betalingfrist ved utløpet av kvartalet for alle som kjøper i løpet'
-    + ' av en kvartalet.<br>'
-    + 'Velg utsalgspris for  <i>PP2000</i>:'
-    + '<input id="inSldr" type="range" min="0" max="2000" value="0"'
-    + ' step="50" onchange="sliderChange(this, &quot;sSliderVal&quot;)" />'
-    + '<p><span id="sSliderVal">0</span> kr <p>'
-    + '<br>(Det finnes '+  inventory.count.PeanutPolishMachine.toLocaleString() + ' varer på lager)'
-      )
-    };
-    //+ '<br>(Det finnes '+ balance.currentAssets['Varelager'].toLocaleString() + ' varer på lager)',
-    this.mainFunc = function(){
-      var p = parseInt(document.getElementById("inSldr").value); //price
-
-      var n = demandFunc(p); n = Math.max( 0, Math.min(n, parseInt2(inventory.count.PeanutPolishMachine)) );
-
-      addto(-n, inventory.count, 'PeanutPolishMachine');
-      addto(n * p, balance.currentAssets, 'Kundefordringer');
-      addto(n * p, result.operatingIncome, 'Salgsinntekt');
-
-      payDate = new Date(d.getFullYear(), 3, 0);
-      paymentsDue['sale' + dateToString(d)] = {
-                              Date: {d: payDate.getDate(), m: payDate.getMonth() + 1, y: payDate.getFullYear()},
-                              amount: function(){return(n * p);},
-                              add1_obj: balance.currentAssets,
-                              add1_name: 'Kundefordringer',
-                              add1_sign: -1,
-                              add2_obj: balance.currentAssets,
-                              add2_name: 'Bankinnskudd',
-                              add2_sign: 1,
-                              cfobj_obj: cashFlowStatement.operatingActivities,
-                              cfobj_name: 'Innbetaling fra kunder',
-                              cfobj_sign: 1
-      };
-
-      this.eventTxt = function(){
-        var d_ = new Date(d.getFullYear(), d.getMonth() + 3, 0);
-        return(dateToString2(d_) + ': ' + n
-          + " peanøttpoleringsmaskiner ble i løpet av kvartalet solgt for " + p
-          + " kroner per stk."
-        );
-      }
-
-    };
-    this.eventTxt = function(){return('');};
-
-  },
+  //salget gikk dårligere enn forventet pga dårlig vær hard vinter, etterspørselen ser ut til å ta seg opp ---> lik etterspørselsfunksjon
   function(d) {
     this.dayNr = dateDiff(baseDate, new Date(baseDate.getFullYear(), baseDate.getMonth() + 4, 1));
     function sliderChange(x) {
@@ -199,8 +146,8 @@ var assignments = [
     }
     this.txtFunc = function() {
       return(
-      'Salget av <i>PP2000</i> ble som forventet, hele kvartalet sett under ett.'
-    + 'Likevel så merket man et brå nedgang i salget mot slutten av perioden.<br>'
+      'Salget av <i>PP2000</i> ble som forventet, hele dette kvartalet sett under ett.'
+    + 'Likevel merket man et brå nedgang i salget mot slutten av perioden.<br>'
     + 'Man regner med at dette skyldes den nyeste modellen peanøttpoleringsmaskin <i>P10000</i>.'
     + 'som har tatt markedet med storm. <br>Grunnet mer avansert teknologi er denne noe dyrere'
     + ' i innkjøp (' + unitPrice2.toLocaleString() + '<br>'
@@ -247,6 +194,7 @@ var assignments = [
     this.eventTxt = function(){return(0);}
 
   },
+  // Mulighet til å selge i differensiert marked................................................................................................
   function(d) {
     this.dayNr = dateDiff(baseDate, new Date(baseDate.getFullYear(), baseDate.getMonth() + 4, 2));
     this.txtFunc = function() {

@@ -74,9 +74,9 @@ function nxtFunc() {
 
 
     // New year --- Evaluate last years result
-    if((dateToday.getDate() === 31 & dateToday.getMonth() === 2) |
+    if(/*(dateToday.getDate() === 31 & dateToday.getMonth() === 2) |
         (dateToday.getDate() === 30 & dateToday.getMonth() === 6) |
-        (dateToday.getDate() === 30 & dateToday.getMonth() === 8) |
+        (dateToday.getDate() === 30 & dateToday.getMonth() === 8) |*/
         (dateToday.getDate() === 31 & dateToday.getMonth() === 11)){
       document.getElementById("divAssingment").innerHTML =
                 'Perioden er omme, endelig resultat og kontantstrømoversikt er nå klart.'

@@ -4,7 +4,7 @@ function buyFunc(d, item, n, price, freight) {
   addto(n * price + freight, balance.currentLiabilities, 'Leverandørgjeld');
   addto(n, inventory.count, item);
   payDate = new Date(d.getFullYear(), 3, 0);
-  console.log(payDate);
+  //console.log(payDate);
   paymentsDue['order' + dateToString(d)  + item] = {
                           Date: {d: payDate.getDate(), m: payDate.getMonth() + 1, y: payDate.getFullYear()},
                           amount: n * price + freight,
