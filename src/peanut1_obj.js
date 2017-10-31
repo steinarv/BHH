@@ -94,7 +94,8 @@ var assignments = [
     + '<br><br><br>Det er tid for å sende en bestilling til produsent, med levering'
     + ' neste dag og betalingsfrist ved utgangen av kvartalet.<br>'
     + 'Prisen fra Hong Kong (inntakskost) for <i>PP2000</i> er kr ' + unitPrice1.toLocaleString()
-    + ' pr enhet. Flyfrakten koster kr ' + freightPrice.toLocaleString() + ' pr flygning.<br>'
+    + ' pr enhet. Flyfrakten koster kr ' + freightPrice.toLocaleString() + ' pr flygning'
+		+ ' og høyest mulig bestillingskvantum er 500 stk.<br>'
     + 'Hvor mange eksemplarer anbefaler du at ErikH$EirikH bestiller?'
     + '<input id="in_PP2000_n" type="range" min="0" max="500" value="0" name = "sldrBuy"'
     + 'step="10" onchange="sliderChange(this)" />'
@@ -112,7 +113,7 @@ var assignments = [
             var item1 = 'PP2000';
             var n_buy1 = document.getElementById('in_' + item1 + '_n').valueAsNumber;
             var p_sale1 = document.getElementById('in_' + item1 + '_p').valueAsNumber; //price
-            var n_sale1 = demandFunc(p_sale1);
+            var n_sale1 = Math.floor(demandFunc(p_sale1) * 0.9);
             // Register merchendise in! ..............................................................................
             sEventTxt += buyFunc(d, item1, n_buy1, unitPrice[item1], freightPrice);
 
@@ -129,95 +130,27 @@ var assignments = [
     };
     this.eventTxt = function(){return(0);}
 
-  },
-  //salget gikk dårligere enn forventet pga dårlig vær hard vinter, etterspørselen ser ut til å ta seg opp ---> lik etterspørselsfunksjon
-  // Dropp dennne, ta eventuelt til slutt!
-  function() {
+	},
+   function() {
     d = new Date(baseDate.getFullYear(), baseDate.getMonth() + 4, 1);
-    console.log("Assignment 2: ", dateToString2(d));
-    this.dayNr = dateDiff(baseDate, d);
-    function sliderChange(x) {
-      document.getElementById("sSliderVal").innerHTML = x.value.toLocaleString();
-    }
-    this.txtFunc = function() {
-
-      var inventoryTxt = '<br>';
-      if(inventory.count["PP2000"] > 0) {
-        inventoryTxt += '(Det er ' + inventory.count["PP2000"].toLocaleString()
-        + ' enheter med <i>PP2000</i> igjen på lager.) <br>';
-      }
-
-
-      outTxt =
-      'Grunnet en uvanlig hard vinter ble ikke salget av <i>PP2000</i> helt som foventet. '
-      + 'Man forventer at dette er et fobigående fenomen, og at forholdet mellom pris og etterspørsel,'
-      + ' i neste kvartal vil være tilsvarende det man forventet for foregående periode:<br><br>'
-      + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
-      + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
-      + '</td><td>' + demandFunc(500) + '</td></tr></table>'
-      + 'Lengre frem i tid er det knyttet større usikkerhet til etterspørselen da det er en rivende '
-      + 'utvikling i peanøttpoleringsmaskinteknologien, og nye modeller kommer stadig på markedet.<br>'
-      + '<br><br>'
-      + 'Prisen fra Hong Kong (inntakskost) for <i>PP2000</i> er fortsatt kr ' + unitPrice["PP2000"].toLocaleString()
-      + ' pr enhet. Flyfrakten koster kr ' + freightPrice.toLocaleString() + ' pr flygning.<br>'
-      + 'Hvor mange eksemplarer anbefaler du at ErikH$EirikH bestiller denne gangen?'
-      + inventoryTxt + '<br>'
-      + '<input id="in_PP2000_n" type="range" min="0" max="500" value="0" name = "sldrBuy"'
-      + 'step="10" onchange="sliderChange(this)" />'
-      + '<p><span id="s_in_PP2000_n">0</span> enheter <p>'
-      + '<br> Markedsføringen av de bestilte peanøttpoleringsmakinene starter umiddelbart,'
-      + ' og prisen må derfor også bestemmes: <br>'
-      + '<input id="in_PP2000_p" type="range" min="0" max="2000" value="0" name = "sldrPrice"'
-      + ' step="50" onchange="sliderChange(this)" />'
-      + '<p><span id="s_in_PP2000_p">0</span> kr <p>'
-      + '<br>Når du nå trykker neste, vil vi bevege oss tre måneder frem i tid for å se resultatet av dine beslutnigner...<br>';
-
-      return(outTxt);
-    };
-    this.mainFunc = function() {
-            sEventTxt = '';
-
-            var item1 = 'PP2000';
-            var n_buy1 = document.getElementById('in_' + item1 + '_n').valueAsNumber;
-            var p_sale1 = document.getElementById('in_' + item1 + '_p').valueAsNumber; //price
-            var n_sale1 = demandFunc(p_sale1);
-            // Register merchendise in! ..............................................................................
-            sEventTxt += buyFunc(d, item1, n_buy1, unitPrice[item1], freightPrice);
-
-            // Register merchendise out! ..............................................................................
-            sEventTxt = sellFunc(d, item1, n_sale1, p_sale1) + sEventTxt;
-
-
-            // Event report..............................................................................................
-            this.eventTxt = function(){
-              // Date reported here should be more carefully decided
-              return(sEventTxt);
-            };
-            // Update financial statement after first quarter
-            corFunc();
-    };
-    this.eventTxt = function(){return(0);}
-
-  },
-  function() {
-    d = new Date(baseDate.getFullYear(), baseDate.getMonth() + 7, 1);
     this.dayNr = this.dayNr = dateDiff(baseDate, d);
     function sliderChange(x) {
       document.getElementById("sSliderVal").innerHTML = x.value.toLocaleString();
     }
     this.txtFunc = function() {
       outTxt =
-      'Salget av <i>PP2000</i> ble som forventet, hele dette kvartalet sett under ett.'
-      + 'Likevel merket man et brå nedgang i salget mot slutten av perioden.<br>'
+      'Salget av <i>PP2000</i> ble noe lavere enn forventet dette kvartalet.'
+      + ' Spesielt merket man et brå nedgang i salget mot slutten av perioden.<br>'
       + 'Man regner med at dette skyldes den nyeste modellen peanøttpoleringsmaskin <i>P10000</i>.'
       + 'som har tatt markedet med storm. <br>Grunnet mer avansert teknologi er denne noe dyrere'
-      + ' i innkjøp (' + unitPrice["P10000"].toLocaleString() + ' kroner per stk.).<br>'
+      + ' i innkjøp, ' + unitPrice["P10000"].toLocaleString() + ' kroner per stk., samtidig som'
+			+ ' flyfrakten fra Hong Kong fortsatt koster kroner '
+      + freightPrice.toLocaleString() + ' pr flygning, med en begrensning på 500 enheter.<br><br>'
       + 'Etterspørselen gjennom neste kvartal forventes å være tilsvarende forrige modell<br><br>'
       + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
       + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
       + '</td><td>' + demandFunc(500) + '</td></tr></table>'
-      + 'Flyfrakten fra Hong Kong for <i>P10000</i> er lik fortsatt '
-      + freightPrice.toLocaleString() + ' pr flygning.<br>'
+      + '<br> Hvor mange enhter <i>P10000</i> bør ErikH$EirikH bestille?<br><br>'
       + '<input id="in_P10000_n" type="range" min="0" max="500" value="0" name = "sldrBuy"'
       + 'step="10" onchange="sliderChange(this)" />'
       + '<p><span id="s_in_P10000_n">0</span> enheter <p>'
@@ -255,8 +188,9 @@ var assignments = [
       // Register merchendise out! ..............................................................................
       sEventTxt = sellFunc(d, item1, n_sale1, p_sale1) + sEventTxt;
 
-
-      if(document.getElementById("rbYes").checked) {
+		
+			var rbYes = document.getElementById("rbYes");
+      if(rbYes != null && rbYes.checked) {
         var item2 = 'PP2000'
         var p_sale2 = 75;
         var n_sale2 = inventory.count[item2];
@@ -275,22 +209,170 @@ var assignments = [
     this.eventTxt = function(){return(0);}
 
   },
-  // Mulighet til å selge i differensiert marked................................................................................................
-  /*,
-  function(d) {
-    this.dayNr = dateDiff(baseDate, new Date(baseDate.getFullYear(), baseDate.getMonth() + 3, 1)) + 1;
+  function() {
+    d = new Date(baseDate.getFullYear(), baseDate.getMonth() + 7, 1);
+    this.dayNr = this.dayNr = dateDiff(baseDate, d);
+    function sliderChange(x) {
+      document.getElementById("sSliderVal").innerHTML = x.value.toLocaleString();
+    }
     this.txtFunc = function() {
-      return(
-        'Spillet er over. Du kan utforske resultat og balanse under. <br>'
-    )};
-    this.mainFunc = function(){
-      // Maybe some scoring and vizualisation here
-      document.getElementById('nxtBtn').disabled = true;
-      //document.getElementById("pEvent").innerHTML = '<br>';
-    };
-    this.eventTxt = function(){return(' ');};
+      
+	  var inventoryTxt = '<br>';
+      if(inventory.count["P10000"] > 0) {
+        inventoryTxt += '(Det er ' + inventory.count["P10000"].toLocaleString()
+        + ' enheter med <i>P10000</i> igjen på lager.) <br>';
+	  }
+	  
+	  outTxt =
+      '<i>P10000</i> har solgt som forventet, og man regner med at etterspørselen vil være lik'
+			+ ' også i neste periode. <br><br>' 
+      + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
+      + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
+      + '</td><td>' + demandFunc(500) + '</td></tr></table>'
+      + 'Stykkpris(' + unitPrice["P10000"].toLocaleString() + ') og flyfrakt ('
+      + freightPrice.toLocaleString() + ' pr flygning) har ikke endret seg.<br>'
+			+ 'Imidlertid har det åpnet seg en mulighet for å selge disse peanøttpoleringsmakinene på Island.'
+			+ ' Grunnet geografisk avstand og kundenens ønske om å prøve maskinene på egne peanøtter'
+			+ ' før eventuelle kjøp vil ikke prissettingen her påvirke lokal etterspørsel.' 
+			+ ' Forholdet mellom pris og etterspørsel på Island er som følger:<br><br>'
+			+ '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
+      + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
+      + '</td><td>' + demandFunc(500) + '</td></tr></table>'
+			+ 'ErikH$EirikH må betale kroner 50 i frakt for hver peanøttpoleringsmakin som blir solgt til Island.'
+			+ '<br><br>Hvor mange enheter <i>P10000</i> mener du ErikH$EirikH bør bestille, gitt forutsetningene over?'
+			+ inventoryTxt
+      + '<input id="in_P10000_n" type="range" min="0" max="500" value="0" name = "sldrBuy"'
+      + 'step="10" onchange="sliderChange(this)" />'
+      + '<p><span id="s_in_P10000_n">0</span> enheter <p>'
+      + '<br> Nå må det settes en lokal pris og en pris for det islandske markedet. Merk at lokal etterspørsel'
+			+ ' vil bli dekket først, og det er da eventuelt resternde lager som blir tilbudt på Island.<br>'
+			+ 'Lokal pris: <br>'
+      + '<input id="in_P10000_p1" type="range" min="0" max="2000" value="0" name = "sldrPrice1"'
+      + ' step="50" onchange="sliderChange(this)" />'
+      + '<p><span id="s_in_P10000_p1">0</span> kr <p>'
+			+ 'Pris på island: <br>'
+      + '<input id="in_P10000_p2" type="range" min="0" max="2000" value="0" name = "sldrPrice2"'
+      + ' step="50" onchange="sliderChange(this)" />'
+      + '<p><span id="s_in_P10000_p2">0</span> kr <p>';
 
-  }*/
+      
+
+      return(outTxt + inventoryTxt)
+    };
+    this.mainFunc = function() {
+      sEventTxt = '';
+
+      var item1 = 'P10000';
+      var n_buy1 = document.getElementById('in_' + item1 + '_n').valueAsNumber;
+      var p_sale1 = document.getElementById('in_' + item1 + '_p1').valueAsNumber; //price
+      var n_sale1 = demandFunc(p_sale1);
+      // Register merchendise in! ..............................................................................
+      sEventTxt += buyFunc(d, item1, n_buy1, unitPrice[item1], freightPrice);
+
+      // Register merchendise out! ..............................................................................
+      sEventTxt = sellFunc(d, item1, n_sale1, p_sale1) + sEventTxt;
+
+
+      /*if(document.getElementById("rbYes").checked) {
+        var item2 = 'PP2000'
+        var p_sale2 = 75;
+        var n_sale2 = inventory.count[item2];
+        sEventTxt = sellFunc(d, item2, n_sale2, p_sale2) + sEventTxt;
+      }*/
+
+
+      // Event report..............................................................................................
+      this.eventTxt = function(){
+        // Date reported here should be more carefully decided
+        return(sEventTxt);
+      };
+      // Update financial statement after first quarter
+      corFunc();
+    };
+    this.eventTxt = function(){return(0);}
+
+  },
+  function() {
+    d = new Date(baseDate.getFullYear(), baseDate.getMonth() + 10, 1);
+    this.dayNr = this.dayNr = dateDiff(baseDate, d);
+    function sliderChange(x) {
+      document.getElementById("sSliderVal").innerHTML = x.value.toLocaleString();
+    }
+    this.txtFunc = function() {
+      
+	  var inventoryTxt = '<br>';
+      if(inventory.count["P10000"] > 0) {
+        inventoryTxt += '(Det er ' + inventory.count["P10000"].toLocaleString()
+        + ' enheter med <i>P10000</i> igjen på lager.) <br>';
+	  }
+	  
+	  outTxt =
+      '<i>P10000</i> har solgt som forventet, og man regner med at etterspørselen vil være lik'
+	  + ' i neste periode, både lokalt og på Island. <br><br>'
+	  + 'Lokal etterspørsel:'
+      + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
+      + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
+      + '</td><td>' + demandFunc(500) + '</td></tr></table>'
+      + 'Etterspørsel på Island:'
+	  + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
+      + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
+      + '</td><td>' + demandFunc(500) + '</td></tr></table>'
+	  + 'Grunnet en brå økning i prisen på råoilje har fraktprisen på peanøttpoleringsmakiner økt dramatisk. <br>'
+	  + 'ErikH$EirikH må betale kroner 150 i frakt for hver peanøttpoleringsmakin som blir solgt til Island og'
+	  + ' flyfrakten fra Hong Kong har også økt til 300 000 kr.'
+	  + '<br><br>Hvor mange enheter <i>P10000</i> mener du ErikH$EirikH bør bestille, gitt de nye forutsetningene?'
+	  + inventoryTxt
+      + '<input id="in_P10000_n" type="range" min="0" max="500" value="0" name = "sldrBuy"'
+      + 'step="10" onchange="sliderChange(this)" />'
+      + '<p><span id="s_in_P10000_n">0</span> enheter <p>'
+      + '<br> Nå må det settes en lokal pris og en pris for det islandske markedet. Merk at lokal etterspørsel'
+	  + ' vil bli dekket først, og det er da eventuelt resternde lager som blir tilbudt på Island.<br>'
+	  + 'Lokal pris: <br>'
+      + '<input id="in_P10000_p1" type="range" min="0" max="2000" value="0" name = "sldrPrice1"'
+      + ' step="50" onchange="sliderChange(this)" />'
+      + '<p><span id="s_in_P10000_p1">0</span> kr <p>'
+	  + 'Pris på island: <br>'
+      + '<input id="in_P10000_p2" type="range" min="0" max="2000" value="0" name = "sldrPrice2"'
+      + ' step="50" onchange="sliderChange(this)" />'
+      + '<p><span id="s_in_P10000_p2">0</span> kr <p>';
+
+      
+
+      return(outTxt + inventoryTxt)
+    };
+    this.mainFunc = function() {
+      sEventTxt = '';
+
+      var item1 = 'P10000';
+      var n_buy1 = document.getElementById('in_' + item1 + '_n').valueAsNumber;
+      var p_sale1 = document.getElementById('in_' + item1 + '_p1').valueAsNumber; //price
+      var n_sale1 = demandFunc(p_sale1);
+      // Register merchendise in! ..............................................................................
+      sEventTxt += buyFunc(d, item1, n_buy1, unitPrice[item1], freightPrice);
+
+      // Register merchendise out! ..............................................................................
+      sEventTxt = sellFunc(d, item1, n_sale1, p_sale1) + sEventTxt;
+
+
+      /*if(document.getElementById("rbYes").checked) {
+        var item2 = 'PP2000'
+        var p_sale2 = 75;
+        var n_sale2 = inventory.count[item2];
+        sEventTxt = sellFunc(d, item2, n_sale2, p_sale2) + sEventTxt;
+      }*/
+
+
+      // Event report..............................................................................................
+      this.eventTxt = function(){
+        // Date reported here should be more carefully decided
+        return(sEventTxt);
+      };
+      // Update financial statement after first quarter
+      corFunc();
+    };
+    this.eventTxt = function(){return(0);}
+
+  }
 ];
 
 

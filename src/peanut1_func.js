@@ -50,7 +50,7 @@ function sellFunc(d, item, n, price) {
                           cfobj_sign: 1
   };
 
-  return(dateToString2(payDate) + ':' + n + ' stk. ' + item + ' ble solgt for kroner ' + price + 'per stk.<br>');
+  return(dateToString2(payDate) + ':' + n + ' stk. ' + item + ' ble solgt for kroner ' + price + ' per stk.<br>');
 }
 
 
@@ -109,11 +109,19 @@ function updateFinStat() {
   }
   daysSinceUpdatingFinStat = 0;
 
-  //Cost of goods sold
-  for(var key1 in inventory.count) {
+  //Update inventory value and calculate cost of goods sold
+  inventoryFunc();
 
-    var n_now = inventory.count[key1];
-    var n_before = 0;
+}
+
+function inventoryFunc() {
+	
+	var n_now, n_before, n_calc, n_sold, costGoodsSold;
+	
+	for(var key1 in inventory.count) {
+
+    n_now = inventory.count[key1];
+    n_before = 0;
     // Find inventory before recent period
     for(var key2 in inventory.detailed) {
       if(inventory.detailed[key2].name === key1) {
@@ -124,12 +132,14 @@ function updateFinStat() {
     var n_sold = n_before - n_now;
     // Update inventory and calculate cost of goods sold
     if(n_sold > 0) {
-      var costGoodsSold = 0; var n_calc = 0;
+      costGoodsSold = 0; n_calc = 0;
       for(var key2 in inventory.detailed) {
         if(inventory.detailed[key2].name === key1) {
-          n_tmp = n_sold - n_calc;
-          n_calc += Math.min(inventory.detailed[key2].n, n_sold);
+					
+          n_calc = Math.min(inventory.detailed[key2].n, n_sold);
           inventory.detailed[key2].n -= n_calc;
+					n_sold -= n_calc //n_sold should be named n_sold_not_calculated
+					
           costGoodsSold += n_calc * inventory.detailed[key2].p;
         }
       }
@@ -138,8 +148,8 @@ function updateFinStat() {
     }
 
   }
-
 }
+
 
 function corFunc() {
   updateFinStat();

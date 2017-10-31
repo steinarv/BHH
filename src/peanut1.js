@@ -92,9 +92,10 @@ function nxtFunc() {
 
       //document.getElementById("sEvent").innerHTML = '';
       evaluatePeriod = true;
+	  document.getElementById('nxtBtn').disabled = true;
       // document.getElementById('corBtn').disabled = true;
     }
 
-  } while(!evaluatePeriod & !evaluateAssingment & assignmentNr < nAssignments)
+  } while(!evaluatePeriod & !evaluateAssingment & assignmentNr <= nAssignments) // last condition means it will run to end of period
 
 }
