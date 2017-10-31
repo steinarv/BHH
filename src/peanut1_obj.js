@@ -85,7 +85,7 @@ var assignments = [
     }
     this.txtFunc = function() {
       return(
-      'Etter å ha forhørt seg litt i markedet, har ErikH&EirikH kommer frem til en tabell. <br>'
+      'Etter å ha forhørt seg litt i markedet, har ErikH&EirikH kommer frem til en tabell'
     + ' som de mener oppsumerer forholdet mellom etterspørsel og pris gjennom inneværende kvartal '
     + 'for den topp moderne peanøttpoleringsmakinen; <i>PP2000</i> . <br><br>'
     + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
@@ -94,7 +94,7 @@ var assignments = [
     + '<br><br><br>Det er tid for å sende en bestilling til produsent, med levering'
     + ' neste dag og betalingsfrist ved utgangen av kvartalet.<br>'
     + 'Prisen fra Hong Kong (inntakskost) for <i>PP2000</i> er kr ' + unitPrice1.toLocaleString()
-    + ' pr enhet. Flyfrakten koster kr ' + freightPrice.toLocaleString() + ' pr flygning'
+    + ' pr enhet. Flyfrakten koster kr ' + freightPrice1.toLocaleString() + ' pr flygning'
 		+ ' og høyest mulig bestillingskvantum er 500 stk.<br>'
     + 'Hvor mange eksemplarer anbefaler du at ErikH$EirikH bestiller?'
     + '<input id="in_PP2000_n" type="range" min="0" max="500" value="0" name = "sldrBuy"'
@@ -115,7 +115,7 @@ var assignments = [
             var p_sale1 = document.getElementById('in_' + item1 + '_p').valueAsNumber; //price
             var n_sale1 = Math.floor(demandFunc(p_sale1) * 0.9);
             // Register merchendise in! ..............................................................................
-            sEventTxt += buyFunc(d, item1, n_buy1, unitPrice[item1], freightPrice);
+            sEventTxt += buyFunc(d, item1, n_buy1, unitPrice[item1], freightPrice1);
 
             // Register merchendise out! ..............................................................................
             sEventTxt = sellFunc(d, item1, n_sale1, p_sale1) + sEventTxt;
@@ -145,7 +145,7 @@ var assignments = [
       + 'som har tatt markedet med storm. <br>Grunnet mer avansert teknologi er denne noe dyrere'
       + ' i innkjøp, ' + unitPrice["P10000"].toLocaleString() + ' kroner per stk., samtidig som'
 			+ ' flyfrakten fra Hong Kong fortsatt koster kroner '
-      + freightPrice.toLocaleString() + ' pr flygning, med en begrensning på 500 enheter.<br><br>'
+      + freightPrice1.toLocaleString() + ' pr flygning, med en begrensning på 500 enheter.<br><br>'
       + 'Etterspørselen gjennom neste kvartal forventes å være tilsvarende forrige modell<br><br>'
       + '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
       + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
@@ -183,7 +183,7 @@ var assignments = [
       var p_sale1 = document.getElementById('in_' + item1 + '_p').valueAsNumber; //price
       var n_sale1 = demandFunc(p_sale1);
       // Register merchendise in! ..............................................................................
-      sEventTxt += buyFunc(d, item1, n_buy1, unitPrice[item1], freightPrice);
+      sEventTxt += buyFunc(d, item1, n_buy1, unitPrice[item1], freightPrice1);
 
       // Register merchendise out! ..............................................................................
       sEventTxt = sellFunc(d, item1, n_sale1, p_sale1) + sEventTxt;
@@ -230,7 +230,7 @@ var assignments = [
       + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
       + '</td><td>' + demandFunc(500) + '</td></tr></table>'
       + 'Stykkpris(' + unitPrice["P10000"].toLocaleString() + ') og flyfrakt ('
-      + freightPrice.toLocaleString() + ' pr flygning) har ikke endret seg.<br>'
+      + freightPrice1.toLocaleString() + ' pr flygning) har ikke endret seg.<br>'
 			+ 'Imidlertid har det åpnet seg en mulighet for å selge disse peanøttpoleringsmakinene på Island.'
 			+ ' Grunnet geografisk avstand og kundenens ønske om å prøve maskinene på egne peanøtter'
 			+ ' før eventuelle kjøp vil ikke prissettingen her påvirke lokal etterspørsel.' 
@@ -238,7 +238,7 @@ var assignments = [
 			+ '<table class="table table"><tr><th>Pris</th><td>1500</td><td>500</td></tr>'
       + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
       + '</td><td>' + demandFunc(500) + '</td></tr></table>'
-			+ 'ErikH$EirikH må betale kroner 50 i frakt for hver peanøttpoleringsmakin som blir solgt til Island.'
+			+ 'ErikH$EirikH må betale kroner ' + shippingIceland1.toLocaleString() + ' i frakt for hver peanøttpoleringsmakin som blir solgt til Island.'
 			+ '<br><br>Hvor mange enheter <i>P10000</i> mener du ErikH$EirikH bør bestille, gitt forutsetningene over?'
 			+ inventoryTxt
       + '<input id="in_P10000_n" type="range" min="0" max="500" value="0" name = "sldrBuy"'
@@ -264,23 +264,40 @@ var assignments = [
 
       var item1 = 'P10000';
       var n_buy1 = document.getElementById('in_' + item1 + '_n').valueAsNumber;
-      var p_sale1 = document.getElementById('in_' + item1 + '_p1').valueAsNumber; //price
+      var p_sale1 = document.getElementById('in_' + item1 + '_p1').valueAsNumber; //price market 1
+			var p_sale2 = document.getElementById('in_' + item1 + '_p2').valueAsNumber; //price market 2
       var n_sale1 = demandFunc(p_sale1);
+			
       // Register merchendise in! ..............................................................................
-      sEventTxt += buyFunc(d, item1, n_buy1, unitPrice[item1], freightPrice);
+      sEventTxt += buyFunc(d, item1, n_buy1, unitPrice[item1], freightPrice1);
 
-      // Register merchendise out! ..............................................................................
+      // Register merchendise out in market 1! ..................................................................
       sEventTxt = sellFunc(d, item1, n_sale1, p_sale1) + sEventTxt;
-
-
-      /*if(document.getElementById("rbYes").checked) {
-        var item2 = 'PP2000'
-        var p_sale2 = 75;
-        var n_sale2 = inventory.count[item2];
-        sEventTxt = sellFunc(d, item2, n_sale2, p_sale2) + sEventTxt;
-      }*/
-
-
+			// Register merchendise out in market 1! ..................................................................
+      var n_sale2 = Math.min(inventory.count['P10000'], demandFunc(p_sale2));
+			if(n_sale2 > 0){
+				sEventTxt = sellFunc(d, item1, n_sale2, p_sale2) + sEventTxt;
+				// Register shipmentcost to Iceland
+				addto(n_sale2 * shippingIceland1, result.operatingCosts, 'Andre driftskostnader');
+				addto(n_sale2 * shippingIceland1, balance.currentLiabilities, 'Leverandørgjeld');
+				payDate = new Date(d.getFullYear(), d.getMonth() + 3, 0);
+				paymentsDue['shipping' + dateToString(d)  + item1] = {
+                          Date: {d: payDate.getDate(), m: payDate.getMonth() + 1, y: payDate.getFullYear()},
+                          amount: n_sale2 * shippingIceland1,
+                          add1_obj: balance.currentLiabilities,
+                          add1_name: 'Leverandørgjeld',
+                          add1_sign: -1,
+                          add2_obj: balance.currentAssets,
+                          add2_name: 'Bankinnskudd',
+                          add2_sign: -1,
+                          cfobj_obj: cashFlowStatement.operatingActivities,
+                          cfobj_name: 'Betalt frakt Island',
+                          cfobj_sign: -1
+				};
+			}
+			
+			
+			
       // Event report..............................................................................................
       this.eventTxt = function(){
         // Date reported here should be more carefully decided
@@ -318,8 +335,9 @@ var assignments = [
       + '<tr><th>Forventet salg</th><td>' + demandFunc(1500)
       + '</td><td>' + demandFunc(500) + '</td></tr></table>'
 	  + 'Grunnet en brå økning i prisen på råoilje har fraktprisen på peanøttpoleringsmakiner økt dramatisk. <br>'
-	  + 'ErikH$EirikH må betale kroner 150 i frakt for hver peanøttpoleringsmakin som blir solgt til Island og'
-	  + ' flyfrakten fra Hong Kong har også økt til 300 000 kr.'
+	  + 'ErikH$EirikH må nå betale kroner ' + shippingIceland2.toLocaleString() 
+		+ ' i frakt for hver peanøttpoleringsmakin som blir solgt til Island og'
+	  + ' flyfrakten fra Hong Kong har også økt til ' + freightPrice2.toLocaleString() + ' kr.'
 	  + '<br><br>Hvor mange enheter <i>P10000</i> mener du ErikH$EirikH bør bestille, gitt de nye forutsetningene?'
 	  + inventoryTxt
       + '<input id="in_P10000_n" type="range" min="0" max="500" value="0" name = "sldrBuy"'
@@ -345,21 +363,36 @@ var assignments = [
 
       var item1 = 'P10000';
       var n_buy1 = document.getElementById('in_' + item1 + '_n').valueAsNumber;
-      var p_sale1 = document.getElementById('in_' + item1 + '_p1').valueAsNumber; //price
+      var p_sale1 = document.getElementById('in_' + item1 + '_p1').valueAsNumber; //price market 1
+			var p_sale2 = document.getElementById('in_' + item1 + '_p2').valueAsNumber; //price market 2
       var n_sale1 = demandFunc(p_sale1);
       // Register merchendise in! ..............................................................................
-      sEventTxt += buyFunc(d, item1, n_buy1, unitPrice[item1], freightPrice);
+      sEventTxt += buyFunc(d, item1, n_buy1, unitPrice[item1], freightPrice2);
 
       // Register merchendise out! ..............................................................................
       sEventTxt = sellFunc(d, item1, n_sale1, p_sale1) + sEventTxt;
-
-
-      /*if(document.getElementById("rbYes").checked) {
-        var item2 = 'PP2000'
-        var p_sale2 = 75;
-        var n_sale2 = inventory.count[item2];
-        sEventTxt = sellFunc(d, item2, n_sale2, p_sale2) + sEventTxt;
-      }*/
+			// Register merchendise out in market 1! ..................................................................
+      var n_sale2 = Math.min(inventory.count['P10000'], demandFunc(p_sale2));
+			if(n_sale2 > 0){
+				sEventTxt = sellFunc(d, item1, n_sale2, p_sale2) + sEventTxt;
+				// Register shipmentcost to Iceland
+				addto(n_sale2 * shippingIceland2, result.operatingCosts, 'Andre driftskostnader');
+				addto(n_sale2 * shippingIceland2, balance.currentLiabilities, 'Leverandørgjeld');
+				payDate = new Date(d.getFullYear(), d.getMonth() + 3, 0);
+				paymentsDue['shipping' + dateToString(d)  + item1] = {
+                          Date: {d: payDate.getDate(), m: payDate.getMonth() + 1, y: payDate.getFullYear()},
+                          amount: n_sale2 * shippingIceland2,
+                          add1_obj: balance.currentLiabilities,
+                          add1_name: 'Leverandørgjeld',
+                          add1_sign: -1,
+                          add2_obj: balance.currentAssets,
+                          add2_name: 'Bankinnskudd',
+                          add2_sign: -1,
+                          cfobj_obj: cashFlowStatement.operatingActivities,
+                          cfobj_name: 'Betalt frakt Island',
+                          cfobj_sign: -1
+				};
+			}
 
 
       // Event report..............................................................................................

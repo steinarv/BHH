@@ -6,7 +6,7 @@ function buyFunc(d, item, n, price, freight) {
   //console.log('Buying: ' + dateToString2(d));
   payDate = new Date(d.getFullYear(), d.getMonth() + 3, 0);
   //console.log('Pay date: ' + dateToString2(payDate));
-  paymentsDue['order' + dateToString(d)  + item] = {
+  paymentsDue['order' + dateToString(d)  + item + Object.keys(paymentsDue).length] = {
                           Date: {d: payDate.getDate(), m: payDate.getMonth() + 1, y: payDate.getFullYear()},
                           amount: n * price + freight,
                           add1_obj: balance.currentLiabilities,
@@ -36,7 +36,7 @@ function sellFunc(d, item, n, price) {
   addto(n * price, result.operatingIncome, 'Salgsinntekt');
 
   payDate = new Date(d.getFullYear(), d.getMonth() + 3, 0);
-  paymentsDue['sale' + dateToString(d) + item] = {
+  paymentsDue['sale' + dateToString(d) + item + Object.keys(paymentsDue).length] = {
                           Date: {d: payDate.getDate(), m: payDate.getMonth() + 1, y: payDate.getFullYear()},
                           amount: n * price,
                           add1_obj: balance.currentAssets,

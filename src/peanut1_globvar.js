@@ -17,8 +17,11 @@ var unitPrice = {
 }
 var unitPrice1 = 100;
 var unitPrice2 = 200;
-var freightPrice = 200000;
+var freightPrice1 = 200000;
+var freightPrice2 = 400000;
 function demandFunc(p) {return(500 - 0.2 * p);};
+var shippingIceland1 = 50;
+var shippingIceland2 = 150;
 
 
 var result0 // Result when last reported
