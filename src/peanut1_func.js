@@ -50,7 +50,7 @@ function sellFunc(d, item, n, price) {
                           cfobj_sign: 1
   };
 
-  return(dateToString2(payDate) + ':' + n + ' stk. ' + item + ' ble solgt for kroner ' + price + '.<br>');
+  return(dateToString2(payDate) + ':' + n + ' stk. ' + item + ' ble solgt for kroner ' + price + 'per stk.<br>');
 }
 
 
