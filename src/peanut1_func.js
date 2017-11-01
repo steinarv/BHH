@@ -222,7 +222,7 @@ function cngTxt(iNewVal, key, obj) {
 	if(dateDiff(dateToday, new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + 1)) === 0) {return(''); }
 	
 	if(obj != undefined) {
-		console.log('obj[key] = ' + obj[key] + ' --- key = ' + key);
+		//console.log('obj[key] = ' + obj[key] + ' --- key = ' + key);
 		var iPastVal = obj[key] === undefined ? 0 : parseInt2(obj[key]);
 		var iDiff = iNewVal - iPastVal;
 		var sStyle = 'style="color:' + (iDiff >= 0 ? "blue" : "red") + '";';

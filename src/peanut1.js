@@ -49,7 +49,7 @@ function nxtFunc() {
       makeCashFlowStat();
 
       assignmentNr++;
-      console.log("Creating new assignment: ", dateToString2(dateToday));
+      //console.log("Creating new assignment: ", dateToString2(dateToday));
       if(assignmentNr < nAssignments)assignment = new assignments[assignmentNr]();
       evaluateAssingment = false;
     }
@@ -59,7 +59,7 @@ function nxtFunc() {
 
     dateToday = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + dayNr);
     document.getElementById("tdDate").innerHTML = "Dato: " + dateFormat(dateToday);
-		console.log(dateToString2(dateToday));
+		
     // Check of any paymentsDue or raporting dates
     checkForPaymentsDue(dateToday);
     daysSinceUpdatingFinStat ++;

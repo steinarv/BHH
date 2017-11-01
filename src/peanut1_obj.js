@@ -78,7 +78,7 @@ var assignments = [
   },*/
   function() {
     d = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + 1);
-    console.log("Assignment 1: ", dateToString2(d));
+    
     this.dayNr = this.dayNr = dateDiff(baseDate, d); // 1
     function sliderChange(x) {
       document.getElementById("sSliderVal").innerHTML = x.value.toLocaleString();
