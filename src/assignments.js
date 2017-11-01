@@ -9,8 +9,8 @@ function newAssign() {
 
 
   var input, tmptxt;
-  var obj = new assObj[0]();
-  document.getElementById('pAssign').innerHTML = obj.html;
+  var obj = new assObj[1]();
+  document.getElementById('pAssign').innerHTML = '<b>Oppgavetekst</b><br>' + obj.html;
   var alt  = obj.alt(), ans = obj.ansv;
 
   var pHint = document.getElementById('pHint');
