@@ -1,3 +1,11 @@
+function calcTotAssets() {
+	var key, sum0 = 0;
+	for(key in balance.currentAssets)sum0 += balance.currentAssets[key];
+	for(key in balance.longTermAssets)sum0 += balance.longTermAssets[key];
+	
+	return(sum0)
+}
+
 function buyFunc(d, item, n, price, freight) {
 
   addto(n * price + freight, balance.currentAssets, 'Varelager');
@@ -54,10 +62,13 @@ function sellFunc(d, item, n, price) {
 }
 
 
-function finishResult() {
-
-  var trs = document.getElementById("tbResult").getElementsByTagName('tr');
-  trs[trs.length - 1].cells[0].innerHTML = 'Resultat for ' + dateToday.getFullYear();
+function finishResult(endOfYear=true) {
+	
+	if(endOfYear){
+		var trs = document.getElementById("tbResult").getElementsByTagName('tr');
+		trs[trs.length - 1].cells[0].innerHTML = 'Resultat for ' + dateToday.getFullYear();
+	}
+  
 
   var key, res = 0;
   // Make res from result object.
@@ -65,32 +76,43 @@ function finishResult() {
   for(key in result.operatingCosts)res -= result.operatingCosts[key];
   for(key in result.financeCosts)res -= result.financeCosts[key];
 
-
-  document.getElementById("divAssingment").innerHTML +=
+	if(endOfYear){
+		document.getElementById("divAssingment").innerHTML +=
     '<br><br>Resultatet ble ' + Math.abs(parseInt2(res)).toLocaleString() + ' kroner i '
     + (res>0?'overskudd':'underskudd') + '.';
+		
+	
+		document.getElementById("pEvent").innerHTML = dateToString2(dateToday) + ': Årets resultat ble på '
+		+ parseInt2(res) + ' kroner. <br>' + document.getElementById("pEvent").innerHTML;
+	}
+	
 
-  // Updata equity in balance
-  if(balance.shareholdersEquity['Udekket tap'] === 0) {
-    // Check for negative equity
-    var neg_eq = balance.shareholdersEquity['Annen egenkapital'] + res;
-    if(neg_eq < 0) {
-      addto(neg_eq, balance.shareholdersEquity, 'Udekket tap');
-      addto(res - neg_eq, balance.shareholdersEquity, 'Annen egenkapital'); // = 0
-    }else {
-      addto(res, balance.shareholdersEquity, 'Annen egenkapital');
-    }
+	// Save result in object
+	result.res = res;
+	
+	if(endOfYear) {
+		// Updata equity in balance
+		if(balance.shareholdersEquity['Udekket tap'] === 0) {
+			// Check for negative equity
+			var neg_eq = balance.shareholdersEquity['Annen egenkapital'] + res;
+			if(neg_eq < 0) {
+				addto(neg_eq, balance.shareholdersEquity, 'Udekket tap');
+				addto(res - neg_eq, balance.shareholdersEquity, 'Annen egenkapital'); // = 0
+			}else {
+				addto(res, balance.shareholdersEquity, 'Annen egenkapital');
+			}
 
-  }else {
-    // Check for positive equity
-    var pos_eq = balance.shareholdersEquity['Udekket tap'] + res
-    if(pos_eq > 0){
-      addto(pos_eq, balance.shareholdersEquity, 'Annen egenkapital');
-      addto(res - pos_eq, balance.shareholdersEquity, 'Udekket tap');
-    }else {
-      addto(res, balance.shareholdersEquity, 'Udekket tap');
-    }
-  }
+		}else {
+			// Check for positive equity
+			var pos_eq = balance.shareholdersEquity['Udekket tap'] + res
+			if(pos_eq > 0){
+				addto(pos_eq, balance.shareholdersEquity, 'Annen egenkapital');
+				addto(res - pos_eq, balance.shareholdersEquity, 'Udekket tap');
+			}else {
+				addto(res, balance.shareholdersEquity, 'Udekket tap');
+			}
+		}
+	}
 }
 
 
@@ -195,13 +217,31 @@ function checkForPaymentsDue(d) {
 }
 
 
+function cngTxt(iNewVal, key, obj) {
+	
+	if(dateDiff(dateToday, new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + 1)) === 0) {return(''); }
+	
+	if(obj != undefined) {
+		console.log('obj[key] = ' + obj[key] + ' --- key = ' + key);
+		var iPastVal = obj[key] === undefined ? 0 : parseInt2(obj[key]);
+		var iDiff = iNewVal - iPastVal;
+		var sStyle = 'style="color:' + (iDiff >= 0 ? "blue" : "red") + '";';
+		return('<i ' + sStyle + '>(' + iDiff.toLocaleString() + ')</i>'); 
+		
+	}else {
+		return('');
+	
+	}
+}
+
 function makeResult() {
   var tbl = document.getElementById("tbResult");
   var trs = tbl.getElementsByTagName('tr');
   var nr = trs.length;
 
-  var i, n, rw, td, val, sumIncome = 0, sumCost = 0;
-  // delete old rows
+  var i, n, rw, td, val, ival, rghtCell, sumIncome = 0, sumCost = 0;
+	
+	// delete old rows
   for(i = 1; i < nr; i++)tbl.deleteRow(-1);
 
   // make new table
@@ -209,15 +249,21 @@ function makeResult() {
   rw = tbl.insertRow(-1);
   td = rw.insertCell(-1);
   td.innerHTML = '<b>Driftsinntekter</b>';
-  td.colSpan = 3
+  td.colSpan = 5
 
   for(var key in result.operatingIncome){
     val = result.operatingIncome[key];
     if(val != 0){
+			ival = parseInt2(val);
+			
       rw = tbl.insertRow(-1);
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1)
-      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
+      rw.insertCell(-1);rw.insertCell(-1); // Debet cells
+      
+			rghtCell = rw.insertCell(-1);
+			rghtCell.innerHTML = cngTxt(ival, key, result0.operatingIncome);
+			rghtCell.className = "text-right";
+			rw.insertCell(-1).innerHTML = ival.toLocaleString();
 
       sumIncome += val;
     }
@@ -227,15 +273,22 @@ function makeResult() {
   rw = tbl.insertRow(-1);
   td = rw.insertCell(-1);
   td.innerHTML = '<b>Driftskostnader</b>';
-  td.colSpan = 3
+  td.colSpan = 5
 
   for(var key in result.operatingCosts){
     val = result.operatingCosts[key];
     if(val != 0){
+			ival = parseInt2(val);
+			
       rw = tbl.insertRow(-1);
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
-      rw.insertCell(-1)
+			
+			rghtCell = rw.insertCell(-1);
+			rghtCell.innerHTML = cngTxt(ival, key, result0.operatingCosts);
+			rghtCell.className = "text-right";
+      rw.insertCell(-1).innerHTML = ival.toLocaleString();
+      
+			rw.insertCell(-1);rw.insertCell(-1); // Credit cells
 
       sumCost += val;
     }
@@ -245,15 +298,21 @@ function makeResult() {
   rw = tbl.insertRow(-1);
   td = rw.insertCell(-1);
   td.innerHTML = '<b>Finansinntekter</b>';
-  td.colSpan = 3
+  td.colSpan = 5
 
   for(var key in result.financeIncome){
     val = result.financeIncome[key];
     if(val != 0){
-      rw = tbl.insertRow(-1);
+      ival = parseInt2(val);
+			
+			rw = tbl.insertRow(-1);
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1)
-      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
+      rw.insertCell(-1);rw.insertCell(-1); // Debet cells
+			
+			rghtCell = rw.insertCell(-1);
+			rghtCell.innerHTML = cngTxt(ival, key, result0.financeIncome);
+			rghtCell.className = "text-right";
+      rw.insertCell(-1).innerHTML = ival.toLocaleString();
 
       sumIncome += val;
     }
@@ -263,21 +322,29 @@ function makeResult() {
   rw = tbl.insertRow(-1);
   td = rw.insertCell(-1);
   td.innerHTML = '<b>Finanskostnader</b>';
-  td.colSpan = 3
+  td.colSpan = 5
 
   for(var key in result.financeCosts){
     val = result.financeCosts[key];
 
     if(val != 0){
+			ival = parseInt2(val);
+			
       rw = tbl.insertRow(-1);
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
-      rw.insertCell(-1);
+			
+			rghtCell = rw.insertCell(-1);
+			rghtCell.innerHTML = cngTxt(ival, key, result0.financeCosts);
+			rghtCell.className = "text-right";
+      rw.insertCell(-1).innerHTML = ival.toLocaleString();
+      
+			rw.insertCell(-1);rw.insertCell(-1); // Credit cells
 
       sumCost += val;
     }
 
   }
+	
   // Result -------------------------------------------------------------
   rw = tbl.insertRow(-1);
   td = rw.insertCell(-1);
@@ -285,10 +352,19 @@ function makeResult() {
     new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + dayNr).getFullYear();
   var res = parseInt2(sumIncome - sumCost);
   if(res > 0) {
+		rghtCell = rw.insertCell(-1);
+		rghtCell.innerHTML = cngTxt(res, 'res', result0);
+		rghtCell.className = "text-right";
+		
     rw.insertCell(-1).innerHTML = (res).toLocaleString();
-    rw.insertCell(-1);
+    
+		rw.insertCell(-1);rw.insertCell(-1);
   }else {
-    rw.insertCell(-1)
+    rw.insertCell(-1);rw.insertCell(-1);
+		
+		rghtCell = rw.insertCell(-1);
+		rghtCell.innerHTML = cngTxt(res, 'res', result0);
+		rghtCell.className = "text-right";
     rw.insertCell(-1).innerHTML = (res * -1).toLocaleString();
   }
 }
@@ -355,7 +431,7 @@ function makeBalance() {
   var trs = tbl.getElementsByTagName('tr');
   var nr = trs.length;
 
-  var i, n, rw, td, val, sum1 = 0, sum2 = 0;
+  var i, n, rw, td, val, ival, rghtCell, sum1 = 0, sum2 = 0;
   // delete old rows
   for(i = 0; i < nr; i++)tbl.deleteRow(-1);
 
@@ -365,16 +441,22 @@ function makeBalance() {
   rw = tbl.insertRow(-1);
   td = rw.insertCell(-1);
   td.innerHTML = '<b>Omløpsmidler</b>';
-  td.colSpan = 2
+  td.colSpan = 3
   for(key in balance.currentAssets){
     val = balance.currentAssets[key];
 
     if(val != 0) {
+			ival = parseInt2(val);
       rw = tbl.insertRow(-1);
 
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
-      sum1 += val;
+			
+			rghtCell = rw.insertCell(-1);
+			rghtCell.innerHTML = cngTxt(ival, key, balance0.currentAssets);
+			rghtCell.className = "text-right";
+      rw.insertCell(-1).innerHTML = ival.toLocaleString();
+      
+			sum1 += val;
     }
 
   }
@@ -382,16 +464,22 @@ function makeBalance() {
   rw = tbl.insertRow(-1);
   td = rw.insertCell(-1);
   td.innerHTML = '<b>Anleggsmidler</b>';
-  td.colSpan = 2
+  td.colSpan = 3
   for(key in balance.longTermAssets){
     val = balance.longTermAssets[key];
 
     if(val != 0) {
+			ival = parseInt2(val);
       rw = tbl.insertRow(-1);
 
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
-      sum1 += val;
+			
+			rghtCell = rw.insertCell(-1);
+			rghtCell.innerHTML = cngTxt(ival, key, balance0.longTermAssets);
+			rghtCell.className = "text-right";
+      rw.insertCell(-1).innerHTML = ival.toLocaleString();
+      
+			sum1 += val;
     }
 
   }
@@ -405,7 +493,7 @@ function makeBalance() {
   rw = trs[j]
   td = rw.insertCell(-1);
   td.innerHTML = '<b>Kortsiktig gjeld</b>';
-  td.colSpan = 2;
+  td.colSpan = 3;
   for(key in balance.currentLiabilities){
 
     val = balance.currentLiabilities[key];
@@ -418,12 +506,19 @@ function makeBalance() {
         rw = tbl.insertRow(-1);
         rw.insertCell(-1);
         rw.insertCell(-1);
+				rw.insertCell(-1);
       }
-
-
+			ival = parseInt2(val);
+			
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
-      sum2 += val;
+			
+			rghtCell = rw.insertCell(-1);
+			rghtCell.innerHTML = cngTxt(ival, key, balance0.currentLiabilities);
+			rghtCell.className = "text-right";
+      
+			rw.insertCell(-1).innerHTML = ival.toLocaleString();
+      
+			sum2 += val;
     }
   }
 
@@ -437,7 +532,7 @@ function makeBalance() {
   }
   td = rw.insertCell(-1);
   td.innerHTML = '<b>Langsiktig gjeld</b>';
-  td.colSpan = 2;
+  td.colSpan = 3;
   for(key in balance.longTermLiabilities){
 
     val = balance.longTermLiabilities[key];
@@ -450,12 +545,19 @@ function makeBalance() {
         rw = tbl.insertRow(-1);
         rw.insertCell(-1);
         rw.insertCell(-1);
+				rw.insertCell(-1);
       }
-
-
+			ival = parseInt2(val);
+			
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
-      sum2 += val;
+			
+			rghtCell = rw.insertCell(-1);
+			rghtCell.innerHTML = cngTxt(ival, key, balance0.longTermLiabilities);
+			rghtCell.className = "text-right";
+      
+			rw.insertCell(-1).innerHTML = ival.toLocaleString();
+      
+			sum2 += val;
     }
   }
 
@@ -469,7 +571,7 @@ function makeBalance() {
   }
   td = rw.insertCell(-1);
   td.innerHTML = '<b>Egenkapital</b>';
-  td.colSpan = 2;
+  td.colSpan = 3;
   for(key in balance.shareholdersEquity){
     val = balance.shareholdersEquity[key];
 
@@ -481,11 +583,19 @@ function makeBalance() {
         rw = tbl.insertRow(-1);
         rw.insertCell(-1);
         rw.insertCell(-1);
+				rw.insertCell(-1);
       }
-
+      ival = parseInt2(val);
+			
       rw.insertCell(-1).innerHTML = key.toString();
-      rw.insertCell(-1).innerHTML = parseInt2(val).toLocaleString();
-      sum2 += val;
+			
+			rghtCell = rw.insertCell(-1);
+			rghtCell.innerHTML = cngTxt(ival, key, balance0.shareholdersEquity);
+			rghtCell.className = "text-right";
+      
+			rw.insertCell(-1).innerHTML = ival.toLocaleString();
+      
+			sum2 += val;
     }
   }
 
@@ -498,10 +608,17 @@ function makeBalance() {
       rw = tbl.insertRow(-1);
       rw.insertCell(-1);
       rw.insertCell(-1);
+			rw.insertCell(-1);
     }
-
+		ival = parseInt2(sum1 - sum2);
+		
     rw.insertCell(-1).innerHTML = 'Foreløpig resultat for ' + dateToday.getFullYear();
-    rw.insertCell(-1).innerHTML = parseInt2(sum1 - sum2).toLocaleString();
+    
+		rghtCell = rw.insertCell(-1);
+		rghtCell.innerHTML = cngTxt(ival, key, result0.res); // Important result0 not set to current
+		rghtCell.className = "text-right";
+			
+		rw.insertCell(-1).innerHTML = ival.toLocaleString();
 
     sum2 = sum1;
   }
@@ -509,8 +626,26 @@ function makeBalance() {
 
   // sum row at the end
   rw = tbl.insertRow(-1);
-  rw.insertCell(-1); rw.insertCell(-1).innerHTML = '<u>' + parseInt2(sum1).toLocaleString() + '</u>';
-  rw.insertCell(-1); rw.insertCell(-1).innerHTML = '<u>' + parseInt2(sum2).toLocaleString() + '</u>';
+	
+	// Assets
+	ival = parseInt2(sum1);
+  rw.insertCell(-1);
+	
+	rghtCell = rw.insertCell(-1);
+	rghtCell.innerHTML = cngTxt(ival, 'totAssets', balance0); // Important result0 not set to current
+	rghtCell.className = "text-right";
+		
+	rw.insertCell(-1).innerHTML = '<u>' + ival.toLocaleString() + '</u>';
+	
+	// Equity and liabilities
+	ival = parseInt2(sum2);
+  rw.insertCell(-1);
+
+	rghtCell = rw.insertCell(-1);
+	rghtCell.innerHTML = cngTxt(ival, 'totAssets', balance0); // Important result0 not set to current
+	rghtCell.className = "text-right";
+	
+	rw.insertCell(-1).innerHTML = '<u>' + ival.toLocaleString() + '</u>';
 }
 
 
@@ -522,7 +657,7 @@ function makeCashFlowStat() {
   var trs = tbl.getElementsByTagName('tr');
   var nr = trs.length;
 
-  var i, n, rw, td, val, ival, sum1 = 0, sum2 = 0;
+  var i, n, rw, td, val, ival, rghtCell, sum0, sum1 = 0, sum2 = 0;
   var boolOA = false; boolIF = false;
   // delete old rows
   for(i = 0; i < nr; i++)tbl.deleteRow(-1);
@@ -531,6 +666,8 @@ function makeCashFlowStat() {
   rw = tbl.insertRow(-1);
   rw.insertCell(-1).innerHTML = '<b>IB Bankinnskudd</b>';
   rw.insertCell(-1);
+	rw.insertCell(-1);
+	rw.insertCell(-1);
   rw.insertCell(-1).innerHTML = cashFlowStatement.ibBank.toLocaleString();
 
   // Operating activites ----------------------------------------------------
@@ -538,10 +675,18 @@ function makeCashFlowStat() {
     val = cashFlowStatement.operatingActivities[key];
 
     if(val != 0){
+			ival = parseInt2(Math.abs(val));
+			
       rw = tbl.insertRow(-1);
       rw.insertCell(-1).innerHTML = (val > 0 ? '+ ' : '- ') + key.toString();
-      rw.insertCell(-1).innerHTML = parseInt2(Math.abs(val)).toLocaleString();
+			
+			rghtCell = rw.insertCell(-1);
+			rghtCell.innerHTML = cngTxt(ival, key, cashFlowStatement0.operatingActivities);
+			rghtCell.className = "text-right";
+      
+			rw.insertCell(-1).innerHTML = ival.toLocaleString();
       rw.insertCell(-1);
+			rw.insertCell(-1);
 
       sum1 += val;
       boolOA = true;
@@ -550,10 +695,23 @@ function makeCashFlowStat() {
   }
   if(boolOA){
     // Sum if any acitivites
+		ival = parseInt2(sum1);
+		
     rw = tbl.insertRow(-1);
     rw.insertCell(-1).innerHTML = '<b>= Kontantoverskudd fra drift</b>'
     rw.insertCell(-1);
-    rw.insertCell(-1).innerHTML = parseInt2(sum1).toLocaleString();
+		rw.insertCell(-1);
+		
+		// hackish.......................................................................................................
+		sum0 = 0; for(key in cashFlowStatement0.operatingActivities)sum0 += cashFlowStatement0.operatingActivities[key];
+		cashFlowStatement0.operatingActivities.sum = sum0;
+		//...............................................................................................................
+		
+		rghtCell = rw.insertCell(-1);
+		rghtCell.innerHTML = cngTxt(ival, 'sum0', cashFlowStatement0.operatingActivities);
+		rghtCell.className = "text-right";
+		
+    rw.insertCell(-1).innerHTML = ival.toLocaleString();
   }
 
 
@@ -563,10 +721,20 @@ function makeCashFlowStat() {
     val = cashFlowStatement.investingActivities[key];
 
     if(val != 0){
-      rw = tbl.insertRow(-1);
+			ival = parseInt2(Math.abs(val));
+      
+			rw = tbl.insertRow(-1);
       rw.insertCell(-1).innerHTML = (val > 0 ? '+ ' : '- ') + key.toString();
+			
+			rghtCell = rw.insertCell(-1);
+			rghtCell.innerHTML = cngTxt(ival, key, cashFlowStatement0.investingActivities);
+			rghtCell.className = "text-right";
+			
+		
       rw.insertCell(-1).innerHTML = parseInt2(Math.abs(val)).toLocaleString();
-      rw.insertCell(-1);
+      
+			rw.insertCell(-1);
+			rw.insertCell(-1);
 
       sum2 += val;
       boolIF = true;
@@ -577,10 +745,20 @@ function makeCashFlowStat() {
   for(var key in cashFlowStatement.financingActivities){
     val = cashFlowStatement.financingActivities[key];
     if(val != 0){
-      rw = tbl.insertRow(-1);
+			ival = parseInt2(Math.abs(val));
+      
+			rw = tbl.insertRow(-1);
       rw.insertCell(-1).innerHTML = (val > 0 ? '+ ' : '- ') + key.toString();
+			
+			rghtCell = rw.insertCell(-1);
+			rghtCell.innerHTML = cngTxt(ival, key, cashFlowStatement0.financingActivities);
+			rghtCell.className = "text-right";
+			
+		
       rw.insertCell(-1).innerHTML = parseInt2(Math.abs(val)).toLocaleString();
-      rw.insertCell(-1);
+      
+			rw.insertCell(-1);
+			rw.insertCell(-1);
 
       sum2 += val;
       boolIF = true;
@@ -588,17 +766,34 @@ function makeCashFlowStat() {
 
   }
   if(boolIF){
+		ival = sum2;
     // Sum if any acitivites
     rw = tbl.insertRow(-1);
     rw.insertCell(-1).innerHTML = '<b>= Kontantoverskudd fra eiere, lån og investeringer</b>'
     rw.insertCell(-1);
-    rw.insertCell(-1).innerHTML = parseInt2(sum2).toLocaleString();
+		rw.insertCell(-1);
+		
+		// hackish.......................................................................................................
+		sum0 = 0; for(key in cashFlowStatement0.operatingActivities)sum0 += cashFlowStatement0.financingActivities[key];
+		cashFlowStatement0.financingActivities.sum = sum0;
+		//...............................................................................................................
+		rghtCell = rw.insertCell(-1);
+		rghtCell.innerHTML = cngTxt(ival, 'sum0', cashFlowStatement0.financingActivities);
+		rghtCell.className = "text-right";
+		
+    rw.insertCell(-1).innerHTML = ival.toLocaleString();
   }
 
 
-
+	ival = parseInt2(cashFlowStatement.ibBank + sum1 + sum2)
   rw = tbl.insertRow(-1);
   rw.insertCell(-1).innerHTML = '<b>UB Bankinnskudd</b>'
   rw.insertCell(-1);
-  rw.insertCell(-1).innerHTML = parseInt2(cashFlowStatement.ibBank + sum1 + sum2).toLocaleString();
+	rw.insertCell(-1);
+	
+	rghtCell = rw.insertCell(-1);
+	rghtCell.innerHTML = cngTxt(ival, 'Bankinnskudd', balance0.currentAssets); // Important balance0 is not set to current
+	rghtCell.className = "text-right";
+	
+  rw.insertCell(-1).innerHTML = ival.toLocaleString();
 }

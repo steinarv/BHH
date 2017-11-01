@@ -2,9 +2,11 @@ nAssignments = Object.keys(assignments).length;
 
 
 function onLoadFunc() {
-
+	result0 = clone(result);
+	balance0 = clone(balance);
+	cashFlowStatement0 = clone(cashFlowStatement);
+	
   dateToday = baseDate;
-  makeBalance();
 
   nxtFunc();
 
@@ -17,15 +19,15 @@ function nxtFunc() {
 
     // If new period, clean up result and cash flow statement
     if(evaluatePeriod) {
-
+			// Start with fresh result
       for(var key1 in result)for(var key2 in result[key1])result[key1][key2] = 0;
-
+			// Start with fresh cash flow statement
       for(var key1 in cashFlowStatement)
         for(var key2 in cashFlowStatement[key1])
           cashFlowStatement[key1][key2] = 0;
-
+			// Initial cash holding
       cashFlowStatement.ibBank = balance.currentAssets.Bankinnskudd;
-
+			// Print empty result and cahs flow statement
       makeResult();
       makeCashFlowStat();
 
@@ -37,7 +39,7 @@ function nxtFunc() {
     if(evaluateAssingment){
 
       assignment.mainFunc();
-      document.getElementById("pEvent").innerHTML = assignment.eventTxt(dateToday)
+      document.getElementById("pEvent").innerHTML = assignment.eventTxt()
                       + '<br>' + document.getElementById("pEvent").innerHTML;
 
       // Pop up question ----------------------------------------------------------?
@@ -48,7 +50,7 @@ function nxtFunc() {
 
       assignmentNr++;
       console.log("Creating new assignment: ", dateToString2(dateToday));
-      if(assignmentNr < nAssignments)assignment = new assignments[assignmentNr](dateToday);
+      if(assignmentNr < nAssignments)assignment = new assignments[assignmentNr]();
       evaluateAssingment = false;
     }
 
@@ -57,18 +59,37 @@ function nxtFunc() {
 
     dateToday = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + dayNr);
     document.getElementById("tdDate").innerHTML = "Dato: " + dateFormat(dateToday);
-
+		console.log(dateToString2(dateToday));
     // Check of any paymentsDue or raporting dates
     checkForPaymentsDue(dateToday);
     daysSinceUpdatingFinStat ++;
 
     // Should user unput be requested
-    if(assignment === undefined)assignment = new assignments[assignmentNr](dateToday);
+    if(assignment === undefined)assignment = new assignments[assignmentNr]();
     if(assignment.dayNr === dayNr){
-      evaluateAssingment = true;
-
-      document.getElementById("divAssingment").innerHTML = assignment.txtFunc(dateToday);
-      // above function may disable next button and set evaluateAssingment to false if lasst.
+      // Make sure user input gets evaluated when next button is pressed
+			evaluateAssingment = true;
+			
+			//Update and present (temporary) financial statement
+			updateFinStat();
+      finishResult(false);
+			// Print result
+			makeResult();
+      // Print balance
+			makeBalance();
+			// Print cash flow statement
+			makeCashFlowStat();
+			
+			// Save current cash flow statement
+			cashFlowStatement0 = clone(cashFlowStatement);
+			// Calculate value of equity and save current balance
+			balance.totAssets = calcTotAssets();
+			balance0 = clone(balance);
+			// Save this periods result
+			result0 = clone(result);
+			
+			// Present new assignment
+      document.getElementById("divAssingment").innerHTML = assignment.txtFunc();
     }
 
 
@@ -92,7 +113,7 @@ function nxtFunc() {
 
       //document.getElementById("sEvent").innerHTML = '';
       evaluatePeriod = true;
-	  document.getElementById('nxtBtn').disabled = true;
+			document.getElementById('nxtBtn').disabled = true;
       // document.getElementById('corBtn').disabled = true;
     }
 

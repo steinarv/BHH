@@ -24,7 +24,9 @@ var shippingIceland1 = 50;
 var shippingIceland2 = 150;
 
 
-var result0 // Result when last reported
-var result_1 // Result last period
-var balance0 // Balance when last reported
-var balance_1 // Balance in last period
+var result0; // Result when last reported
+var result_1; // Result last accounting period
+var balance0; // Balance when last reported
+var balance_1; // Balance in last accounting period
+var cashFlowStatement0; 
+var cashFlowStatement1;

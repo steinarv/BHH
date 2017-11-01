@@ -79,7 +79,7 @@ var assignments = [
   function() {
     d = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + 1);
     console.log("Assignment 1: ", dateToString2(d));
-    this.dayNr = this.dayNr = dateDiff(baseDate, d);;
+    this.dayNr = this.dayNr = dateDiff(baseDate, d); // 1
     function sliderChange(x) {
       document.getElementById("sSliderVal").innerHTML = x.value.toLocaleString();
     }
@@ -416,7 +416,8 @@ var balance = { currentAssets: {"Bankinnskudd": 200000},
                 longTermLiabilities: {},
                 shareholdersEquity: {"Aksjekapital": 200000,
                                      "Udekket tap": 0,
-                                     "Annen egenkapital": 0}
+                                     "Annen egenkapital": 0},
+								totAssests: 0
               };
 
 var inventory = {
@@ -439,6 +440,7 @@ var result = {
   operatingIncome: {},
   operatingCosts: {},
   financeCosts: {},
+	res: 0
 };
 
 
