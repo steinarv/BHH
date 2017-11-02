@@ -1,5 +1,5 @@
 //https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
-function shuffle(a) {
+function shuffle(a, roundIt = true) {
     var j, x, i;
     for (i = a.length - 1; i > 0; i--) {
         j = Math.floor(Math.random() * (i + 1));
@@ -7,6 +7,9 @@ function shuffle(a) {
         a[i] = a[j];
         a[j] = x;
     }
+		
+		if(roundIt)for(i = 0; i<a.length; i++)a[i] = Math.round(a[i]);
+		
 		return(a);
 }
 

@@ -51,7 +51,7 @@ function newAssign() {
     input.value = alt[i] == ans;
 
     rw.insertCell(-1).appendChild(input);
-    rw.insertCell(-1).innerHTML = alt[i];
+    rw.insertCell(-1).innerHTML = alt[i].toLocaleString();
   }
 }
 
