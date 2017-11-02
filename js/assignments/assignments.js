@@ -1,3 +1,17 @@
+
+$(function () { 
+		$('#lstCh').multiselect({
+			buttonText: function(options, select) { return("Kapitler: "); },
+			buttonWContainer: '<div class="panel panel-default">'
+		});
+    $('#lstCh').multiselect('selectAll', false);
+		$("#lstCh").multiselect('updateButtonText');
+		
+		newAssign();
+});
+
+
+
 function newAssign() {
   var tbl = document.getElementById("tblAssign");
   var trs = tbl.getElementsByTagName('tr');
@@ -7,16 +21,27 @@ function newAssign() {
   // row variable
   var rw;
 
+	// Make array with chapters from selected arrays
+  var selCh = document.getElementById('lstCh');
+	var tmpArr, assignArray = [];
+	for(var i = 0; i < selCh.length; i++) { 
+		if(selCh[i].selected) {
+			tmpArr = allChaptersArray[i];
+			for(var j = 0; j < tmpArr.length; j++) { assignArray.push(tmpArr[j]); }
+		}
+	}
+	//------------------------------------------------
 
-  var input, tmptxt;
-  var obj = new assObj[1]();
+	var r = rb(0, assignArray.length - 1);
+  var obj = new assignArray[r]();
   document.getElementById('pAssign').innerHTML = '<b>Oppgavetekst</b><br>' + obj.html;
-  var alt  = obj.alt(), ans = obj.ansv;
+  var alt  = obj.alt, ans = obj.ansv;
 
   var pHint = document.getElementById('pHint');
   pHint.innerHTML = 'Hint: ' + obj.hint;
   pHint.style.display = 'none';
 
+	var input;
   for(var i = 0; i < alt.length; i++){
     rw = tbl.insertRow(-1);
 
@@ -31,7 +56,7 @@ function newAssign() {
 }
 
 function onLoadFunc() {
-  newAssign();
+  //newAssign();
 }
 
 

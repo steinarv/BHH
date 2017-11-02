@@ -9,7 +9,11 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+	
+	<!-- Multiselect -->
+	<script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
+	<link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css"/>
+	
   <style>
     body {
       background-color: #2f2f2f !important;
@@ -50,11 +54,24 @@
 
 <body onload="onLoadFunc()">
 
+	<div class="dropdown bg-1">
+    <!-- ################################################################################## -->
+    <!-- <h3>Oppgave</h3> -->
+		
+
 
   <!-- Main -->
   <div class="container bg-1">
     <!-- ################################################################################## -->
     <!-- <h3>Oppgave</h3> -->
+		<br>
+		<select size="5" name="lstStates" multiple="multiple" id="lstCh">
+        <option value="0">Kapittel 0</option>
+        <option value="1">Kapittel 1</option>
+        <!--<option value="3">Kapittel 2</option>
+        <option value="4">Kapittel 3</option>
+        <option value="5">Kapittel 4</option> -->
+    </select> 
 		<br>
     <div class="panel panel-default">
       <div class="panel-body" id="divAssingment">
@@ -62,16 +79,19 @@
         <table id="tblAssign" class="table-padd"></table>
       </div>
     </div>
-    <table class="table">
+    <table class="table table-responsive">
       <tr>
         <td>
-      <button id="ssBtn" onclick="checkSolutionFunc()" class="btn btn-default">Send svar</button>
+					<button id="ssBtn" onclick="checkSolutionFunc()" class="btn btn-default">Send svar</button>
         </td>
         <td>
           <p id=pFeedBack></p>
         </td>
         <td>
           <p id="pScr">Score: <span id="sScr"></span><p>
+        </td>
+				<td>
+          <button id="naBtn" onclick="newAssign()" class="btn btn-default">Ny oppgave</button>
         </td>
       </tr>
     </table>
@@ -86,9 +106,9 @@
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
-<script type="text/javascript" src="src/misc.js"></script>
-<script type="text/javascript" src="src/assignments.js"></script>
-<script type="text/javascript" src="src/assignments_obj.js"></script>
+<script type="text/javascript" src="js/misc.js"></script>
+<script type="text/javascript" src="js/assignments/assignments.js"></script>
+<script type="text/javascript" src="js/assignments/assignments_obj.js"></script>
 
 </body>
 </html>
