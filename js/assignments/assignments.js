@@ -1,4 +1,26 @@
+var testExp = new RegExp('Android|webOS|iPhone|iPad|' +
+													'BlackBerry|Windows Phone|'  +
+													'Opera Mini|IEMobile|Mobile' , 
+													'i');
+													
+var notMobile = !testExp.test(navigator.userAgent)
+var cbMoreOpt = document.getElementById('cbMoreOpt')
+// Function displays button for download canvas format assignment
+function moreOpt() {
+	if(document.getElementById('canvasBtn') === null & cbMoreOpt.checked) {
+		pPrevAssign.innerHTML +='<br><button id="canvasBtn" onclick="dwnldXML()" class="btn btn-default">Eksporter Canvas Zip-fil</button>';
+	}else if(document.getElementById('canvasBtn') != null & !cbMoreOpt.checked) {
+		var elem = document.getElementById('canvasBtn');
+    elem.parentNode.removeChild(elem);
+	}
+}
 
+if(notMobile){ 
+	var prevObj; var thisObj;
+	
+	function dwnldXML(){ downloadFile('BBHoppgave.XML', fXML(prevObj)) };
+}
+							
 $(function () { 
 		$('#lstCh').multiselect({
 			buttonText: function(options, select) { return("Kapitler: "); },
@@ -34,6 +56,7 @@ function newAssign() {
 
 	var r = rb(0, assignArray.length - 1);
   var obj = new assignArray[r]();
+	if(notMobile){ prevObj = thisObj; thisObj = obj; }
   document.getElementById('pAssign').innerHTML = '<b>Oppgavetekst</b><br>' + obj.html;
   var alt  = obj.alt, ans = obj.ansv;
 
@@ -56,11 +79,18 @@ function newAssign() {
 }
 
 function onLoadFunc() {
+	if(!notMobile) {
+		var elem = document.getElementById('divMoreOpt');
+    elem.parentNode.removeChild(elem);
+	}
   //newAssign();
 }
 
 
 function checkSolutionFunc() {
+	//table rows
+	var trs = document.getElementById("tblAssign").getElementsByTagName('tr');
+	//
   var rbs = document.getElementsByName("ans");
   var fdBck = document.getElementById('pFeedBack');
   var sScr = document.getElementById('sScr');
@@ -77,8 +107,12 @@ function checkSolutionFunc() {
 
       ansTxt = '<b>Forige oppgave:</b> <br>' + document.getElementById('pAssign').innerHTML
             +  '<br> <b>Svar på denne oppgaven var:</b> <br>'
-            + document.getElementById("tblAssign").getElementsByTagName('tr')[i].cells[1].innerHTML;
+            + trs[i].cells[1].innerHTML + '<br>';
       pPrevAssign.innerHTML = ansTxt;
+			
+			if(notMobile & cbMoreOpt.checked) {
+				moreOpt();
+			}
 
       newAssign();
     }else {

@@ -54,9 +54,7 @@
 
 <body onload="onLoadFunc()">
 
-	<div class="dropdown bg-1">
-    <!-- ################################################################################## -->
-    <!-- <h3>Oppgave</h3> -->
+
 		
 
 
@@ -66,12 +64,13 @@
     <!-- <h3>Oppgave</h3> -->
 		<br>
 		<select size="5" name="lstStates" multiple="multiple" id="lstCh">
-        <option value="0">Kapittel 0</option>
-        <option value="1">Kapittel 1</option>
-        <!--<option value="3">Kapittel 2</option>
-        <option value="4">Kapittel 3</option>
-        <option value="5">Kapittel 4</option> -->
-    </select> 
+				<option value="0">Kapittel 0</option>
+				<option value="1">Kapittel 1</option>
+				<!--<option value="3">Kapittel 2</option>
+				<option value="4">Kapittel 3</option>
+				<option value="5">Kapittel 4</option> -->
+		</select> 
+		
 		<br>
     <div class="panel panel-default">
       <div class="panel-body" id="divAssingment">
@@ -102,6 +101,9 @@
         <p id=pPrevAssign></p>
       </div>
     </div>
+		<div id="divMoreOpt">
+			Foreleser-valg: <input type="checkbox" id="cbMoreOpt" class="text-right" onclick="moreOpt()">
+		<div>
   </div>
 
 
@@ -109,6 +111,7 @@
 <script type="text/javascript" src="js/misc.js"></script>
 <script type="text/javascript" src="js/assignments/assignments.js"></script>
 <script type="text/javascript" src="js/assignments/assignments_obj.js"></script>
+<script type="text/javascript" src="js/assignments/xmlExport.js"></script>
 
 </body>
 </html>
